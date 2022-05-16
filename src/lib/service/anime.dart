@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:anime_finder/service/qbittorrent.dart';
 import 'package:anime_finder/service/settings.dart';

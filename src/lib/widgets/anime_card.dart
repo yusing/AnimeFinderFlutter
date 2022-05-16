@@ -3,9 +3,6 @@ import 'package:anime_finder/service/settings.dart';
 import 'package:anime_finder/theme/style.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
-import 'future_text.dart';
 
 class AnimeCard extends StatelessWidget {
   final Anime anime;
@@ -49,8 +46,8 @@ class AnimeCard extends StatelessWidget {
         child: Row(
           children: [
             ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 
-                    MediaQuery.of(context).size.width * 0.3),
+                constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.3),
                 child: anime.image()),
             Expanded(
               child: Padding(
@@ -109,14 +106,14 @@ class AnimeCard extends StatelessWidget {
     );
   }
 
-  _showDescriptionDialog(BuildContext context, Anime anime) {
-    Get.defaultDialog(
-        backgroundColor: kBackgroundColor,
-        title: "動漫簡介",
-        titleStyle: kHeadlineMedium,
-        content: FutureText(
-            future: anime.description,
-            placeHolder: '載入中...',
-            style: kBodyLarge));
-  }
+  // _showDescriptionDialog(BuildContext context, Anime anime) {
+  //   Get.defaultDialog(
+  //       backgroundColor: kBackgroundColor,
+  //       title: "動漫簡介",
+  //       titleStyle: kHeadlineMedium,
+  //       content: FutureText(
+  //           future: anime.description,
+  //           placeHolder: '載入中...',
+  //           style: kBodyLarge));
+  // }
 }
