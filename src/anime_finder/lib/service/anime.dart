@@ -19,7 +19,7 @@ class Anime {
   final String? misc;
   final String? magnetUrl;
   String? _imageUrl;
-  String? _description;
+  // String? _description;
   Widget? _image;
 
   Anime({
@@ -83,20 +83,22 @@ class Anime {
     }
     try {
       await QBittorrent.addTorrent(
-          urls: [magnetUrl!], category: 'AnimeFinder', tags: imageUrl, rename: newName);
+          urls: [magnetUrl!], category: 'AnimeFinder', rename: newName);
     } catch (e) {
       return Future.error(e.toString());
     }
   }
 
   static List<Anime> parseRssItems(Iterable<RssItem> items) {
-    final regFilter = Settings.instance.filterNoChinese.value ? RegExp(r'[^\u4e00-\u9fa5]') : 
-    Settings.instance.filterNoCHS.value ? RegExp(r'简体|CHS|GB') : null;
-    
+    final regFilter = Settings.instance.filterNoChinese.value
+        ? RegExp(r'[^\u4e00-\u9fa5]')
+        : Settings.instance.filterNoCHS.value
+            ? RegExp(r'简体|CHS|GB')
+            : null;
+
     if (regFilter != null) {
-      items = items.where((item) =>
-          item.title != null &&
-          !item.title!.contains(regFilter));
+      items = items.where(
+          (item) => item.title != null && !item.title!.contains(regFilter));
     }
 
     return [

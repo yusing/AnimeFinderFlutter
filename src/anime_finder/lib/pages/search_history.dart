@@ -1,9 +1,6 @@
 import 'package:anime_finder/pages/search_result.dart';
-import 'package:anime_finder/service/anime.dart';
-import 'package:anime_finder/service/search_history.dart';
 import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/theme/style.dart';
-import 'package:anime_finder/widgets/anime_list.dart';
 import 'package:anime_finder/widgets/search_bar.dart';
 import 'package:anime_finder/widgets/search_history_listview.dart';
 import 'package:flutter/material.dart';
@@ -31,9 +28,9 @@ class _SearchHistoryPageState extends State<SearchHistoryPage> {
     return Scaffold(
       appBar: SearchBar(searchBarController: _searchBarController),
       body: SearchHistoryListView(
-              searchBarControllerDelegate: () => _searchBarController,
-              searchDelegate: _performSearch,
-            ),
+        searchBarControllerDelegate: () => _searchBarController,
+        searchDelegate: _performSearch,
+      ),
     );
   }
 

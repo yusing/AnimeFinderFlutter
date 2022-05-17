@@ -105,15 +105,4 @@ class AnimeCard extends StatelessWidget {
       ],
     );
   }
-
-  // _showDescriptionDialog(BuildContext context, Anime anime) {
-  //   Get.defaultDialog(
-  //       backgroundColor: kBackgroundColor,
-  //       title: "動漫簡介",
-  //       titleStyle: kHeadlineMedium,
-  //       content: FutureText(
-  //           future: anime.description,
-  //           placeHolder: '載入中...',
-  //           style: kBodyLarge));
-  // }
 }
