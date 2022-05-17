@@ -6,7 +6,7 @@ ACG資源搜尋、下載工具。
 
 - Windows / macOS / android / (linux及iOS可自行編譯)
 - *(編譯用)* [Flutter SDK](https://docs.flutter.dev/get-started/install), *(Android)* [Android Studio](https://developer.android.com/studio/install), *(iOS, macOS)*  [Xcode](https://apps.apple.com/us/app/xcode/id497799835?mt=12), *(Windows)* [Visual Studio](https://visualstudio.microsoft.com/downloads/)
-- 下載功能需要[qBittorrent](https://www.qbittorrent.org/download.php)
+- 下載功能需要[qBittorrent v4.1+](https://www.qbittorrent.org/download.php)
 
 ## 重點功能
 
@@ -20,7 +20,7 @@ ACG資源搜尋、下載工具。
   - [Nyaa](https://nyaa.si) (動漫、音樂、小說、圖片、軟體、遊戲)
 
 - 支持自動過濾簡體字幕動漫 (測試)
-- 支持ACG資源下載(需要[qBittorrent](https://www.qbittorrent.org/download.php))
+- 支持ACG資源下載(需要[qBittorrent v4.1+](https://www.qbittorrent.org/download.php))
 
 ## 介面展示
 
