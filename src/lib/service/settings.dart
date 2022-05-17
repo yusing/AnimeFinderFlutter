@@ -1,21 +1,25 @@
 import 'dart:io';
 
 import 'package:anime_finder/service/anime_provider.dart';
+import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/widgets/setting_item.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
+import 'anime_providers.dart';
+
 final _box = GetStorage();
 
-class Setting<T> {
+class Setting<T> extends ChangeNotifier implements ValueListenable<T> {
   final String title;
   final String key;
   final T defaultValue;
   final void Function(T)? onChange; // for bool
   final Map<String, T>? values; // for dropdown
   final RegExp? validator; // for string
-  // late T _value;
+  final bool Function()? visibilityDelegate;
 
   Setting(
       {required this.title,
@@ -23,197 +27,149 @@ class Setting<T> {
       required this.defaultValue,
       this.onChange,
       this.values,
-      this.validator});
+      this.validator,
+      this.visibilityDelegate})
+      : super();
 
+  @override
   T get value => _box.read(key) ?? defaultValue;
 
-  set value(T value) {
-    _box.write(key, value).then((_) {
-      onChange?.call(value);
+  set value(T newValue) {
+    if (value == newValue) return;
+    _box.write(key, newValue).then((_) {
+      onChange?.call(newValue);
     });
   }
 
-  Widget get widget => SettingItem(setting: this);
+  @override
+  String toString() => '${describeIdentity(this)}($value)';
+
+  Widget widget(void Function(void Function()) setState) => Visibility(
+      visible: visibilityDelegate?.call() ?? true,
+      child: SettingItem(setting: this, setState: setState));
 }
 
-class Settings {
-  static Setting<bool> darkMode = Setting(
-    title: '黑夜模式',
-    key: 'dark_mode',
-    defaultValue: false,
-    onChange: (value) {
-      Get.changeThemeMode(value ? ThemeMode.dark : ThemeMode.light);
-      Get.forceAppUpdate();
-    },
-  );
+abstract class AllSettings {
+  Setting<String> get locale;
+  Setting<bool> get darkMode;
+  Setting<bool> get filterNoChinese;
+  Setting<bool> get filterNoCHS;
+  Setting<double> get textScale;
+  Setting<String> get layoutOrientation;
+  Setting<String> get qBittorrentAPIUrl;
+  Setting<String> get animeProvider;
 
-  static Setting<double> textScale = Setting(
-    title: '文字大小',
-    key: 'text_scale',
-    defaultValue: Platform.isIOS || Platform.isAndroid ? 0.8 : 1.0,
-    values: {
-      '小': 0.8,
-      '中': 1.0,
-      '大': 1.2,
-    },
-    onChange: (value) {
-      Get.forceAppUpdate();
-    },
-  );
+  List<Setting> get list;
+  AnimeProvider get currentAnimeProvider;
+  Future<void> reset();
+}
 
-  static Setting<String> layoutDirection = Setting(
-      title: '布局方向',
-      key: 'layout_direction',
-      defaultValue: "auto",
-      values: {
-        '自動': "auto",
-        '固定豎向': Orientation.portrait.toString(),
-        '固定橫向': Orientation.landscape.toString(),
-      });
+class Settings implements AllSettings {
+  @override
+  Setting<String> get locale => Setting(
+        title: trSettingLocale,
+        key: 'locale',
+        defaultValue: Get.deviceLocale?.languageCode ?? "zh",
+        values: {
+          "繁體中文": "zh",
+          "English": "en",
+        },
+        onChange: (value) {
+          Get.updateLocale(Locale(value));
+        },
+      );
 
-  static Setting<bool> filterNoCHS = Setting(
-    title: '過濾簡體字幕的動漫',
-    key: 'filter_no_chs',
-    defaultValue: false,
-  );
+  @override
+  Setting<bool> get darkMode => Setting(
+        title: trSettingDarkMode,
+        key: 'dark_mode',
+        defaultValue: false,
+        onChange: (value) {
+          Get.changeThemeMode(value ? ThemeMode.dark : ThemeMode.light);
+          Get.forceAppUpdate();
+        },
+      );
 
-  static Setting<String> qBittorrentAPIUrl = Setting(
-    title: 'qBittorrent API 接入點',
-    key: 'qbittorrent_api_url',
-    defaultValue: 'http://localhost:8080',
-    validator: RegExp(r'^https?://.+'),
-  );
+  @override
+  Setting<double> get textScale => Setting(
+        title: trSettingTextScale,
+        key: 'text_scale',
+        defaultValue: Platform.isIOS || Platform.isAndroid ? 0.8 : 1.0,
+        values: {
+          trSettingFontSmall: 0.8,
+          trSettingFontNormal: 1.0,
+          trSettingFontLarge: 1.2,
+        },
+        onChange: (value) {
+          Get.forceAppUpdate();
+        },
+      );
 
-  static Setting<String> animeProvider = Setting(
-      title: '來源',
-      key: 'anime_provider',
-      defaultValue: '動漫花園 [動漫]',
-      onChange: (_) async => await Get.forceAppUpdate(),
-      values: {for (var key in animeProviders.keys) key: key});
+  @override
+  Setting<String> get layoutOrientation => Setting(
+          title: trSettingLayoutOrientation,
+          key: 'layout_orientation',
+          defaultValue: "auto",
+          values: {
+            trSettingAuto: "auto",
+            trSettingPortrait: Orientation.portrait.toString(),
+            trSettingLandscape: Orientation.landscape.toString(),
+          });
 
-  static final Map<String, AnimeProvider> animeProviders = {
-    '動漫花園 [所有分類]': AnimeProvider(
-      name: '動漫花園 [所有分類]',
-      searchUrl:
-          'https://share.dmhy.org/topics/rss/rss.xml?keyword=%q&order=date-desc',
-      latestUrl: 'https://share.dmhy.org/topics/rss/rss.xml',
-    ),
-    '動漫花園 [動漫]': AnimeProvider(
-      name: '動漫花園 [動漫]',
-      searchUrl:
-          'https://share.dmhy.org/topics/rss/rss.xml?keyword=%q&sort_id=2&order=date-desc',
-      latestUrl: 'https://share.dmhy.org/topics/rss/sort_id/2/rss.xml',
-    ),
-    '動漫花園 [動漫音樂]': AnimeProvider(
-      name: '動漫花園 [動漫音樂]',
-      searchUrl:
-          'https://share.dmhy.org/topics/rss/rss.xml?keyword=%q&sort_id=43&order=date-desc',
-      latestUrl: 'https://share.dmhy.org/topics/rss/sort_id/43/rss.xml',
-    ),
-    '動漫花園 [遊戲]': AnimeProvider(
-      name: '動漫花園 [遊戲]',
-      searchUrl:
-          'https://share.dmhy.org/topics/rss/rss.xml?keyword=%q&sort_id=9&order=date-desc',
-      latestUrl: 'https://share.dmhy.org/topics/rss/sort_id/9/rss.xml',
-    ),
-    '動漫花園 [漫畫]': AnimeProvider(
-      name: '動漫花園 [漫畫]',
-      searchUrl:
-          'https://share.dmhy.org/topics/rss/rss.xml?keyword=%q&sort_id=3&order=date-desc',
-      latestUrl: 'https://share.dmhy.org/topics/rss/sort_id/3/rss.xml',
-    ),
-    '動漫花園 [日劇]': AnimeProvider(
-      name: '動漫花園 [日劇]',
-      searchUrl:
-          'https://share.dmhy.org/topics/rss/rss.xml?keyword=%q&sort_id=6&order=date-desc',
-      latestUrl: 'https://share.dmhy.org/topics/rss/sort_id/6/rss.xml',
-    ),
-    'ACG.RIP [所有分類]': AnimeProvider(
-      name: 'ACG.RIP [所有分類]',
-      searchUrl: 'https://acg.rip/.xml?term=%q',
-      latestUrl: 'https://acg.rip/.xml',
-    ),
-    'ACG.RIP [動漫]': AnimeProvider(
-      name: 'ACG.RIP [動漫]',
-      searchUrl: 'https://acg.rip/1.xml?term=%q',
-      latestUrl: 'https://acg.rip/1.xml',
-    ),
-    'Bangumi Moe': AnimeProvider(
-        name: 'Bangumi Moe',
-        searchUrl: 'https://bangumi.moe/rss/search/%q',
-        latestUrl: 'https://bangumi.moe/rss/latest'),
-    'KissSub [所有分類]': AnimeProvider(
-        name: 'KissSub [所有分類]',
-        searchUrl: 'https://www.kisssub.org/rss-%q.xml',
-        latestUrl: 'https://www.kisssub.org/rss.xml'),
-    'KissSub [動漫]': AnimeProvider(
-        name: 'KissSub [動漫]',
-        searchUrl: 'https://kisssub.org/rss-%q+sort_id:1.xml',
-        latestUrl: 'https://www.kisssub.org/rss-1.xml'),
-    'KissSub [漫畫]': AnimeProvider(
-        name: 'KissSub [漫畫]',
-        searchUrl: 'https://kisssub.org/rss-%q+sort_id:2.xml',
-        latestUrl: 'https://www.kisssub.org/rss-2.xml'),
-    'KissSub [音樂]': AnimeProvider(
-        name: 'KissSub [音樂]',
-        searchUrl: 'https://kisssub.org/rss-%q+sort_id:3.xml',
-        latestUrl: 'https://www.kisssub.org/rss-3.xml'),
-    'KissSub [其他]': AnimeProvider(
-        name: 'KissSub [其他]',
-        searchUrl: 'https://kisssub.org/rss-%q+sort_id:5.xml',
-        latestUrl: 'https://www.kisssub.org/rss-5.xml'),
-    'Mikan': AnimeProvider(
-      name: 'Mikan',
-      searchUrl: 'http://mikanani.me/RSS/Search?searchstr=%q',
-      latestUrl: 'http://mikanani.me/RSS/Classic',
-    ),
-    'Nyaa [所有分類]': AnimeProvider(
-      name: 'Nyaa [所有分類]',
-      searchUrl: 'https://nyaa.si/?page=rss&q=%q',
-      latestUrl: 'https://nyaa.si/?page=rss',
-    ),
-    'Nyaa [動漫]': AnimeProvider(
-      name: 'Nyaa [動漫]',
-      searchUrl: 'https://nyaa.si/?page=rss&q=%q&c=1_0&f=0',
-      latestUrl: 'https://nyaa.si/?page=rss&c=1_0&f=0',
-    ),
-    'Nyaa [音樂]': AnimeProvider(
-      name: 'Nyaa [音樂]',
-      searchUrl: 'https://nyaa.si/?page=rss&q=%q&c=2_0&f=0',
-      latestUrl: 'https://nyaa.si/?page=rss&c=2_0&f=0',
-    ),
-    'Nyaa [音樂 - 無損]': AnimeProvider(
-      name: 'Nyaa [音樂 - 無損]',
-      searchUrl: 'https://nyaa.si/?page=rss&q=%q&c=2_1&f=0',
-      latestUrl: 'https://nyaa.si/?page=rss&c=2_1&f=0',
-    ),
-    'Nyaa [小說]': AnimeProvider(
-      name: 'Nyaa [小說]',
-      searchUrl: 'https://nyaa.si/?page=rss&q=%q&c=3_0&f=0',
-      latestUrl: 'https://nyaa.si/?page=rss&c=3_0&f=0',
-    ),
-    'Nyaa [圖片]': AnimeProvider(
-      name: 'Nyaa [圖片]',
-      searchUrl: 'https://nyaa.si/?page=rss&q=%q&c=5_0&f=0',
-      latestUrl: 'https://nyaa.si/?page=rss&c=5_0&f=0',
-    ),
-    'Nyaa [軟體]': AnimeProvider(
-      name: 'Nyaa [軟體]',
-      searchUrl: 'https://nyaa.si/?page=rss&q=%q&c=6_1&f=0',
-      latestUrl: 'https://nyaa.si/?page=rss&c=6_1&f=0',
-    ),
-    'Nyaa [遊戲]': AnimeProvider(
-      name: 'Nyaa [遊戲]',
-      searchUrl: 'https://nyaa.si/?page=rss&q=%q&c=6_2&f=0',
-      latestUrl: 'https://nyaa.si/?page=rss&c=6_2&f=0',
-    ),
-  };
+  @override
+  Setting<bool> get filterNoCHS => Setting(
+      title: trSettingFilterNoChs,
+      key: 'filter_no_chs',
+      defaultValue: false,
+      visibilityDelegate: () => filterNoChinese.value != true);
 
-  static AnimeProvider get currentAnimeProvider =>
+  @override
+  Setting<bool> get filterNoChinese => Setting(
+      title: trSettingFilterNoChinese,
+      key: 'filter_no_chinese',
+      defaultValue: false);
+
+  @override
+  Setting<String> get qBittorrentAPIUrl => Setting(
+        title: trSettingQbittorrentApiUrl,
+        key: 'qbittorrent_api_url',
+        defaultValue: 'http://localhost:8080',
+        validator: RegExp(r'^https?://.+'),
+      );
+
+  @override
+  Setting<String> get animeProvider => Setting(
+          title: trSettingProvider,
+          key: 'anime_provider',
+          defaultValue: 'DMHY 動漫花園 [動漫]',
+          onChange: (_) async => await Get.forceAppUpdate(),
+          values: {
+            for (var entry in animeProviders.entries)
+              entry.value.name: entry.key
+          });
+
+  @override
+  AnimeProvider get currentAnimeProvider =>
       animeProviders[animeProvider.value]!;
 
-  static Future<void> reset() async {
+  @override
+  Future<void> reset() async {
     await GetStorage().erase();
     darkMode.value = darkMode.defaultValue;
   }
+
+  @override
+  List<Setting> get list => [
+        locale,
+        textScale,
+        layoutOrientation,
+        animeProvider,
+        darkMode,
+        filterNoChinese,
+        filterNoCHS,
+        qBittorrentAPIUrl,
+      ];
+
+  static Settings get instance => Settings();
+  static const currentVersion = "v0.2.0";
 }

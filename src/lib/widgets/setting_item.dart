@@ -1,47 +1,35 @@
 import 'package:anime_finder/service/settings.dart';
+import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/theme/style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SettingItem<T> extends StatefulWidget {
+class SettingItem<T> extends StatelessWidget {
   final Setting<T> setting;
-  const SettingItem({super.key, required this.setting});
+  final void Function(void Function()) setState;
 
-  @override
-  State<SettingItem> createState() => _SettingItemState();
-}
-
-class _SettingItemState<T> extends State<SettingItem<T>> {
   final _stringSettingController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  bool _isType<TSetting>() => widget.setting is Setting<TSetting>;
-  bool _isDropdown() => widget.setting.values != null;
+  bool _isType<TSetting>() => setting is Setting<TSetting>;
+  bool _isDropdown() => setting.values != null;
 
-  @override
-  void initState() {
-    super.initState();
+  SettingItem({super.key, required this.setting, required this.setState}) {
     if (_isType<String>() && !_isDropdown()) {
-      _stringSettingController.text = widget.setting.value as String;
+      _stringSettingController.text = setting.value as String;
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _stringSettingController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(widget.setting.title, style: kTitleMedium),
+      title: Text(setting.title, style: kTitleMedium),
       trailing: _isType<bool>()
           ? Switch(
-              value: widget.setting.value as bool,
+              value: setting.value as bool,
               onChanged: (value) {
                 setState(() {
-                  widget.setting.value = value as T;
+                  setting.value = value as T;
                 });
               },
             )
@@ -50,14 +38,14 @@ class _SettingItemState<T> extends State<SettingItem<T>> {
                   alignment: Alignment.center,
                   dropdownColor: kBackgroundColor,
                   style: kTitleMedium,
-                  value: widget.setting.value,
+                  value: setting.value,
                   onChanged: (value) {
                     setState(() {
-                      widget.setting.value = value!;
+                      setting.value = value!;
                     });
                   },
                   items: [
-                      for (final entry in widget.setting.values!.entries)
+                      for (final entry in setting.values!.entries)
                         DropdownMenuItem(
                           alignment: Alignment.center,
                           value: entry.value,
@@ -65,7 +53,7 @@ class _SettingItemState<T> extends State<SettingItem<T>> {
                         )
                     ])
               : _isType<String>()
-                  ? Text(widget.setting.value as String, style: kTitleMedium)
+                  ? Text(setting.value as String, style: kTitleMedium)
                   : null,
       onTap: !_isDropdown() && _isType<String>()
           ? () {
@@ -73,7 +61,8 @@ class _SettingItemState<T> extends State<SettingItem<T>> {
                 contentPadding: const EdgeInsets.all(16),
                 radius: 12,
                 titleStyle: kTitleMedium,
-                title: widget.setting.title,
+                title: setting.title,
+                backgroundColor: kBackgroundColor,
                 content: Form(
                   key: _formKey,
                   child: TextFormField(
@@ -81,10 +70,10 @@ class _SettingItemState<T> extends State<SettingItem<T>> {
                     controller: _stringSettingController,
                     validator: (value) {
                       if (value?.isEmpty ?? true) {
-                        return "不能為空";
+                        return trCannotBeEmpty;
                       }
-                      if (widget.setting.validator?.hasMatch(value!) ?? false) {
-                        return "格式不正確";
+                      if (setting.validator?.hasMatch(value!) ?? false) {
+                        return trInvalidFormat;
                       }
                       return null;
                     },
@@ -92,17 +81,16 @@ class _SettingItemState<T> extends State<SettingItem<T>> {
                 ),
                 actions: [
                   MaterialButton(
-                    child: Text("確定", style: kLabelSmall),
+                    child: Text(trConfirm, style: kLabelSmall),
                     onPressed: () {
                       setState(() {
-                        widget.setting.value =
-                            _stringSettingController.text as T;
+                        setting.value = _stringSettingController.text as T;
                       });
                       Get.back();
                     },
                   ),
                   MaterialButton(
-                      child: Text("取消", style: kLabelSmall),
+                      child: Text(trCancel, style: kLabelSmall),
                       onPressed: () => Get.back()),
                 ],
               );

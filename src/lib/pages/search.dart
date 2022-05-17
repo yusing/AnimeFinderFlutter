@@ -1,11 +1,13 @@
 import 'package:anime_finder/service/anime.dart';
 import 'package:anime_finder/service/search_history.dart';
+import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/theme/style.dart';
 import 'package:anime_finder/widgets/anime_list.dart';
 import 'package:anime_finder/widgets/search_history_listview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+// TODO: 自動搜尋所有集數
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
 
@@ -27,7 +29,7 @@ class _SearchPageState extends State<SearchPage> {
     super.dispose();
     _searchController.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +48,7 @@ class _SearchPageState extends State<SearchPage> {
         title: TextField(
           autofocus: false,
           decoration: InputDecoration(
-            hintText: '搜尋關鍵字...',
+            hintText: trSearchbarHint,
             hintStyle: kBodyMedium.copyWith(
               color: kOnBackgroundColorDarker,
             ),
@@ -96,7 +98,7 @@ class _SearchPageState extends State<SearchPage> {
 
     if (_searchController.text.isEmpty) {
       Get.snackbar(
-        '請輸入關鍵字',
+        trSearchbarEmpty,
         '',
         duration: kSnackbarDuration,
         snackPosition: kSnackbarPosition,

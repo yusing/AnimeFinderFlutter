@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:anime_finder/service/qbittorrent.dart';
 import 'package:anime_finder/service/settings.dart';
+import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/theme/style.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
@@ -60,43 +61,44 @@ class Anime {
     return _image!;
   }
 
-  Future<String> get description async {
-    if (_description == null) {
-      final response = await http.get(Uri.parse('$jikanBaseUrl?q=$title'));
-      try {
-        final data = jsonDecode(utf8.decode(response.bodyBytes))['data'][0];
-        _description =
-            "${data['title_japanese'] ?? ""} - ${data['title_english'] ?? ""}\n\n${data['synopsis']}";
-      } catch (e, st) {
-        debugPrint(e.toString());
-        debugPrintStack(stackTrace: st);
-        _description = "找不到動漫簡介 :(";
-      }
-    }
-    return _description!;
-  }
+  // Future<String> get description async {
+  //   if (_description == null) {
+  //     final response = await http.get(Uri.parse('$jikanBaseUrl?q=$title'));
+  //     try {
+  //       final data = jsonDecode(utf8.decode(response.bodyBytes))['data'][0];
+  //       _description =
+  //           "${data['title_japanese'] ?? ""} - ${data['title_english'] ?? ""}\n\n${data['synopsis']}";
+  //     } catch (e, st) {
+  //       debugPrint(e.toString());
+  //       debugPrintStack(stackTrace: st);
+  //       _description = "找不到動漫簡介 :(";
+  //     }
+  //   }
+  //   return _description!;
+  // }
 
-  Future<void> download() async {
+  Future<void> download(String? newName) async {
     if (magnetUrl == null) {
-      return Future.error("找不到磁力鏈結");
+      return Future.error(trNoMagnetUrl);
     }
     try {
       await QBittorrent.addTorrent(
-          urls: [magnetUrl!], category: 'AnimeFinder', tags: imageUrl);
+          urls: [magnetUrl!], category: 'AnimeFinder', tags: imageUrl, rename: newName);
     } catch (e) {
       return Future.error(e.toString());
     }
   }
 
   static List<Anime> parseRssItems(Iterable<RssItem> items) {
-    if (Settings.filterNoCHS.value) {
-      // filter out items with simplified Chinese title
+    final regFilter = Settings.instance.filterNoChinese.value ? RegExp(r'[^\u4e00-\u9fa5]') : 
+    Settings.instance.filterNoCHS.value ? RegExp(r'简体|CHS|GB') : null;
+    
+    if (regFilter != null) {
       items = items.where((item) =>
-          item.title == null ||
-          !item.title!.contains(
-            RegExp(r'简体|CHS|GB'),
-          ));
+          item.title != null &&
+          !item.title!.contains(regFilter));
     }
+
     return [
       for (final item in items)
         Anime(
@@ -115,7 +117,7 @@ class Anime {
         'Content-Type': 'application/xml;charset=utf-8'
       });
       if (response.statusCode == 200) {
-        if (Settings.currentAnimeProvider.feedType == FeedType.rss) {
+        if (Settings.instance.currentAnimeProvider.feedType == FeedType.rss) {
           final rss = RssFeed.parse(utf8.decode(response.bodyBytes));
           return rss.items == null ? [] : parseRssItems(rss.items!);
         } else {
@@ -124,7 +126,7 @@ class Anime {
         }
       } else {
         debugPrint(utf8.decode(response.bodyBytes));
-        throw Exception('Failed to load rss feed');
+        throw Exception(trConnectionError);
       }
     } catch (e, st) {
       debugPrint(e.toString());
@@ -135,10 +137,10 @@ class Anime {
 
   static Future<List<Anime>> search(String keyword) async {
     return await getAnimes(
-        Settings.currentAnimeProvider.searchUrlKeyword(keyword));
+        Settings.instance.currentAnimeProvider.searchUrlKeyword(keyword));
   }
 
   static Future<List<Anime>> latestAnimes() async {
-    return await getAnimes(Settings.currentAnimeProvider.latestUrl);
+    return await getAnimes(Settings.instance.currentAnimeProvider.latestUrl);
   }
 }

@@ -1,4 +1,5 @@
 import 'package:anime_finder/service/anime.dart';
+import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/theme/style.dart';
 import 'package:anime_finder/widgets/anime_card.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +22,8 @@ class _AnimeListState extends State<AnimeList> {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
           if (snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text('甚麼都沒有...'),
+            return Center(
+              child: Text(trPageNothingYet),
             );
           }
           return ListView.separated(
@@ -49,23 +50,48 @@ class _AnimeListState extends State<AnimeList> {
   }
 
   _showDownloadDialog(Anime anime) {
+    final _formKey = GlobalKey<FormState>();
+    final _filenameController = TextEditingController(text: anime.title);
+
     Get.defaultDialog(
       contentPadding: const EdgeInsets.all(16),
       radius: 12,
-      title: "下載確認",
+      title: trConfirmation,
       titleStyle: kTitleMedium,
-      content: Text(
-        "是否下載\n${anime.title}?",
-        softWrap: true,
-        style: kBodyMedium,
+      content: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              controller: _filenameController,
+              style: kBodySmall,
+              decoration: InputDecoration(
+                icon: const Icon(Icons.file_download),
+                labelText: trFilename,
+                labelStyle: kBodyMedium,
+                contentPadding: const EdgeInsets.only(bottom: 8),
+              ),
+              validator: (value) {
+                if (value?.isEmpty ?? false) {
+                  return trFilenameEmptyError;
+                }
+                return null;
+              },
+            ),
+          ],
+        ),
       ),
       actions: [
         MaterialButton(
-          child: Text("下載", style: kLabelSmall),
+          child: Text(trDownload, style: kLabelSmall),
           onPressed: () {
-            anime.download().then((value) {
+            if (!(_formKey.currentState?.validate() ?? false)) {
+              return; // invalid input
+            }
+            anime.download(_filenameController.text).then((value) {
               Get.snackbar(
-                "正在下載",
+                trDownloadAdded,
                 anime.title ?? "",
                 snackPosition: SnackPosition.BOTTOM,
                 backgroundColor: kBackgroundColor,
@@ -73,7 +99,7 @@ class _AnimeListState extends State<AnimeList> {
               );
             }).onError((e, st) {
               Get.snackbar(
-                "下載失敗",
+                trDownloadError,
                 e.toString(),
                 snackPosition: SnackPosition.BOTTOM,
                 backgroundColor: kBackgroundColor,
@@ -84,7 +110,7 @@ class _AnimeListState extends State<AnimeList> {
           },
         ),
         MaterialButton(
-          child: Text("取消", style: kLabelSmall),
+          child: Text(trCancel, style: kLabelSmall),
           onPressed: () => Get.back(),
         ),
       ],

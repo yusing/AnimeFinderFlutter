@@ -51,17 +51,17 @@ TextTheme textTheme(ColorScheme colorScheme) =>
           color: colorScheme.onBackground,
         ),
         bodyLarge: TextStyle(
-          fontSize: 21,
-          fontWeight: FontWeight.w500,
-          color: colorScheme.onBackground,
-        ),
-        bodyMedium: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w500,
           color: colorScheme.onBackground,
         ),
+        bodyMedium: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: colorScheme.onBackground,
+        ),
         bodySmall: TextStyle(
-          fontSize: 12,
+          fontSize: 14,
           fontWeight: FontWeight.w500,
           color: colorScheme.onBackground,
         ),

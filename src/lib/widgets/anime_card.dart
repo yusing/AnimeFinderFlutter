@@ -27,10 +27,10 @@ class AnimeCard extends StatelessWidget {
               ),
             ]),
         alignment: Alignment.center,
-        child: (Settings.layoutDirection.value == "auto"
+        child: (Settings.instance.layoutOrientation.value == "auto"
                     ? MediaQuery.of(context).orientation
                     : Orientation.values.where((ori) =>
-                        Settings.layoutDirection.value == ori.toString())) ==
+                        Settings.instance.layoutOrientation.value == ori.toString())) ==
                 Orientation.portrait
             ? _verticalLayout()
             : _horizontalLayout(context),

@@ -1,4 +1,5 @@
 import 'package:anime_finder/service/search_history.dart';
+import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/theme/style.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
@@ -23,7 +24,7 @@ class _SearchHistoryListViewState extends State<SearchHistoryListView> {
     if (searchHistory.isEmpty) {
       return Center(
         child: Text(
-          '沒有搜尋紀錄',
+          trNoSearchHistory,
           style: kBodyMedium,
         ),
       );

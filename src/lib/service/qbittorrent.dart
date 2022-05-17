@@ -1,7 +1,10 @@
 // ref: https://github.com/qbittorrent/qBittorrent/wiki/WebUI-API-(qBittorrent-4.1)
 import 'dart:convert';
 import 'dart:io';
+import 'package:anime_finder/service/translation.dart';
+import 'package:byte_size/byte_size.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'settings.dart';
 
@@ -56,6 +59,12 @@ class Torrent {
       state == 'stalledUP' ||
       state == 'queuedUP' ||
       state == 'forcedUP';
+
+  String get status {
+    var torrentInfo = '${state.tr}$trColon${(progress * 100).round()}% ';
+    if (isDownloading) torrentInfo += '(${ByteSize.FromBytes(dlspeed)}/s)';
+    return torrentInfo;
+  }
 
   Future<void> delete() async {
     try {
@@ -142,10 +151,8 @@ enum Filter {
 }
 
 class QBittorrent {
-  static const errorMsg = "無法與qBittorrent連線\n請確認qBittorrent已經啟動且網路連線正常";
-
   static Uri endPointUri(String endPoint) {
-    return Uri.parse('${Settings.qBittorrentAPIUrl.value}$endPoint');
+    return Uri.parse('${Settings.instance.qBittorrentAPIUrl.value}$endPoint');
   }
 
   static Future<http.Response> get(String endPoint,
@@ -154,18 +161,18 @@ class QBittorrent {
       var response = await http
           .get(endPointUri(endPoint))
           .timeout(Duration(seconds: timeoutSecs), onTimeout: () {
-        throw Exception(errorMsg);
+        throw Exception(trQbtErrorMsg);
       });
       if (response.statusCode != 200) {
-        return Future.error(errorMsg);
+        return Future.error(trQbtErrorMsg);
       }
       return response;
     } on SocketException {
-      return Future.error(errorMsg);
+      return Future.error(trQbtErrorMsg);
     } catch (e, st) {
       debugPrint(e.toString());
       debugPrintStack(stackTrace: st);
-      return Future.error(errorMsg);
+      return Future.error(trQbtErrorMsg);
     }
   }
 
@@ -181,7 +188,8 @@ class QBittorrent {
     try {
       var response = await get('/api/v2/torrents/info$params');
       return [
-        for (var torrent in jsonDecode(utf8.decode(response.bodyBytes))) Torrent.fromJson(torrent)
+        for (var torrent in jsonDecode(utf8.decode(response.bodyBytes)))
+          Torrent.fromJson(torrent)
       ];
     } catch (e) {
       return Future.error(e.toString());
@@ -189,7 +197,10 @@ class QBittorrent {
   }
 
   static Future<void> addTorrent(
-      {required List<String> urls, String? category, String? tags}) async {
+      {required List<String> urls,
+      String? category,
+      String? tags,
+      String? rename}) async {
     try {
       debugPrint('Adding torrents... ${urls.join(', ')}');
       var body = {
@@ -201,6 +212,9 @@ class QBittorrent {
       if (tags != null) {
         body['tags'] = tags;
       }
+      if (rename != null) {
+        body['rename'] = rename;
+      }
       await http.post(
         endPointUri('/api/v2/torrents/add'),
         body: body,
@@ -208,7 +222,7 @@ class QBittorrent {
     } catch (e, st) {
       debugPrint('Failed to add torrent: $e');
       debugPrintStack(stackTrace: st);
-      return Future.error(errorMsg);
+      return Future.error(trQbtErrorMsg);
     }
   }
 }

@@ -2,6 +2,7 @@ import 'package:anime_finder/pages/downloads.dart';
 import 'package:anime_finder/pages/home.dart';
 import 'package:anime_finder/pages/search.dart';
 import 'package:anime_finder/pages/settings.dart';
+import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/theme/style.dart';
 import 'package:flutter/material.dart';
 import 'package:anime_finder/widgets/afpage.dart';
@@ -45,18 +46,18 @@ class _NavPageState extends State<NavPage> {
               ),
             ],
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: '主頁',
+            icon: const Icon(Icons.home),
+            label: trHome,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.download),
-            label: '下載',
+            icon: const Icon(Icons.download),
+            label: trDownloads,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: '設定',
+            icon: const Icon(Icons.settings),
+            label: trSettings,
           ),
         ],
         currentIndex: _selectedIndex,

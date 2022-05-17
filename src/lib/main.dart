@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:anime_finder/service/translation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:anime_finder/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'pages/nav.dart';
 import 'service/settings.dart';
@@ -25,18 +27,27 @@ void main() async {
   runApp(GetMaterialApp(
     theme: kLightThemeData,
     darkTheme: kDarkThemeData,
-    themeMode: Settings.darkMode.value ? ThemeMode.dark : ThemeMode.light,
+    themeMode: Settings.instance.darkMode.value ? ThemeMode.dark : ThemeMode.light,
     title: 'AnimeFinder',
     debugShowCheckedModeBanner: false,
     initialRoute: '/',
     routes: {
       '/': (context) => const NavPage(),
     },
+    localizationsDelegates: const [
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ],
+    supportedLocales: const [Locale('zh'), Locale('en')],
+    locale: Locale(Settings.instance.locale.value),
+    fallbackLocale: const Locale('en'),
+    translations: TranslationService(),
     builder: (BuildContext context, Widget? child) {
       final MediaQueryData data = MediaQuery.of(context);
       return MediaQuery(
         data: data.copyWith(
-            textScaleFactor: data.textScaleFactor * Settings.textScale.value),
+            textScaleFactor: data.textScaleFactor * Settings.instance.textScale.value),
         child: child ?? Container(),
       );
     },
