@@ -1,6 +1,6 @@
 import 'package:anime_finder/pages/downloads.dart';
 import 'package:anime_finder/pages/home.dart';
-import 'package:anime_finder/pages/search.dart';
+import 'package:anime_finder/pages/search_history.dart';
 import 'package:anime_finder/pages/settings.dart';
 import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/theme/style.dart';
@@ -42,7 +42,7 @@ class _NavPageState extends State<NavPage> {
           : [
               IconButton(
                 icon: Icon(Icons.search, color: kOnBackgroundColor),
-                onPressed: () => Get.to(() => const SearchPage()),
+                onPressed: () => Get.to(() => const SearchHistoryPage()),
               ),
             ],
       bottomNavigationBar: BottomNavigationBar(
