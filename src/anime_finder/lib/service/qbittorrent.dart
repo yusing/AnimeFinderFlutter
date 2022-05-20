@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'settings.dart';
 
 class Torrent {
-  final int added_on;
+  final int addedOn;
   String category;
   int dlspeed;
   int eta;
@@ -17,10 +17,10 @@ class Torrent {
   String name;
   String state;
   dynamic progress;
-  String save_path;
+  String savePath;
 
   Torrent({
-    required this.added_on,
+    required this.addedOn,
     required this.category,
     required this.dlspeed,
     required this.eta,
@@ -28,12 +28,12 @@ class Torrent {
     required this.name,
     required this.state,
     required this.progress,
-    required this.save_path,
+    required this.savePath,
   });
 
   factory Torrent.fromJson(Map<String, dynamic> json) {
     return Torrent(
-      added_on: json['added_on'],
+      addedOn: json['added_on'],
       category: json['category'],
       dlspeed: json['dlspeed'],
       eta: json['eta'],
@@ -41,7 +41,7 @@ class Torrent {
       name: json['name'],
       state: json['state'],
       progress: json['progress'],
-      save_path: json['save_path'],
+      savePath: json['save_path'],
     );
   }
 
@@ -126,7 +126,7 @@ class Torrent {
       eta = json[0]['eta'];
       state = json[0]['state'];
       progress = json[0]['progress'];
-      save_path = json[0]['save_path'];
+      savePath = json[0]['save_path'];
     } catch (e, st) {
       debugPrint('Failed to update torrent: $e');
       debugPrintStack(stackTrace: st);
@@ -145,8 +145,8 @@ enum Filter {
   inactive,
   resumed,
   stalled,
-  stalled_uploading,
-  stalled_downloading,
+  stalledUploading,
+  stalledDownloading,
   errored
 }
 

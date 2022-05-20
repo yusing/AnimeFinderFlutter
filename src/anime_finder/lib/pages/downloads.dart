@@ -73,7 +73,7 @@ class _DownloadsPageState extends State<DownloadsPage> {
                             style: kBodySmall,
                           ),
                           Text(
-                            torrent.save_path,
+                            torrent.savePath,
                             style: kBodySmall,
                           ),
                         ],
@@ -109,7 +109,7 @@ class _DownloadsPageState extends State<DownloadsPage> {
                                   icon: const Icon(Icons.launch),
                                   onPressed: () async {
                                     var fullPath = path.join(
-                                        torrent.save_path, torrent.name);
+                                        torrent.savePath, torrent.name);
                                     debugPrint('Path: $fullPath');
                                     String url = 'file://$fullPath';
                                     if (await canLaunchUrlString(url)) {
@@ -127,8 +127,8 @@ class _DownloadsPageState extends State<DownloadsPage> {
                                   splashRadius: kIconButtonSplashRadius,
                                   icon: const Icon(Icons.folder),
                                   onPressed: () async {
-                                    debugPrint('Path: ${torrent.save_path}');
-                                    String url = 'file://${torrent.save_path}';
+                                    debugPrint('Path: ${torrent.savePath}');
+                                    String url = 'file://${torrent.savePath}';
                                     if (await canLaunchUrlString(url)) {
                                       await launchUrlString(url);
                                     }
