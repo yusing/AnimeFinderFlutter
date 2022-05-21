@@ -2,6 +2,10 @@
 
 ACG資源搜尋、下載工具。
 
+## Build Status
+
+[![Codemagic build status](https://api.codemagic.io/apps/6284f4c7178d24674d3c1778/6284f4c7178d24674d3c1777/status_badge.svg)](https://codemagic.io/apps/6284f4c7178d24674d3c1778/6284f4c7178d24674d3c1777/latest_build)
+
 ## 系統需求
 
 - Windows / macOS / android / (linux及iOS可自行編譯)

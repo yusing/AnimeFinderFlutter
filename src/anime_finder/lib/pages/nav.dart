@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:anime_finder/widgets/afpage.dart';
 import 'package:get/get.dart';
 
+int _selectedPage = 0;
+
 class NavPage extends StatefulWidget {
   const NavPage({Key? key}) : super(key: key);
 
@@ -16,18 +18,16 @@ class NavPage extends StatefulWidget {
 }
 
 class _NavPageState extends State<NavPage> {
-  int _selectedIndex = 0;
-
   final _pageController = PageController(
     initialPage: 0,
     keepPage: true,
   );
 
-  static final _pages = [
-    const HomePage(),
-    const DownloadsPage(),
-    const SettingsPage(),
-  ];
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +35,13 @@ class _NavPageState extends State<NavPage> {
       title: 'AnimeFinder',
       body: Padding(
         padding: const EdgeInsets.all(24.0),
-        child: PageView(controller: _pageController, children: _pages),
+        child: PageView(controller: _pageController, children: const [
+          HomePage(),
+          DownloadsPage(),
+          SettingsPage(),
+        ]),
       ),
-      actions: _selectedIndex != 0
+      actions: _selectedPage != 0
           ? null
           : [
               IconButton(
@@ -60,21 +64,16 @@ class _NavPageState extends State<NavPage> {
             label: trSettings,
           ),
         ],
-        currentIndex: _selectedIndex,
-        onTap: (index) async {
+        currentIndex: _selectedPage,
+        onTap: (index) {
           setState(() {
-            _selectedIndex = index;
+            _selectedPage = index;
+            _pageController.animateToPage(index,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.ease);
           });
-          await _pageController.animateToPage(index,
-              duration: const Duration(milliseconds: 300), curve: Curves.ease);
         },
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _pageController.dispose();
   }
 }

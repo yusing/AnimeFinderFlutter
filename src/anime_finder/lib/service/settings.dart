@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:anime_finder/pages/home.dart';
 import 'package:anime_finder/service/anime_provider.dart';
 import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/widgets/setting_item.dart';
@@ -9,20 +8,21 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'anime_providers.dart';
+import 'platform.dart';
 
-final _box = GetStorage();
+typedef SettingNameDelegate = String Function();
 
-class Setting<T> extends ChangeNotifier implements ValueListenable<T> {
-  final String title;
+class Setting<T> {
+  final String Function() titleDelegate;
   final String key;
   final T defaultValue;
   final void Function(T)? onChange; // for bool
-  final Map<String, T>? values; // for dropdown
+  final Map<SettingNameDelegate, T>? values; // for dropdown
   final RegExp? validator; // for string
   final bool Function()? visibilityDelegate;
 
   Setting(
-      {required this.title,
+      {required this.titleDelegate,
       required this.key,
       required this.defaultValue,
       this.onChange,
@@ -31,8 +31,17 @@ class Setting<T> extends ChangeNotifier implements ValueListenable<T> {
       this.visibilityDelegate})
       : super();
 
-  @override
-  T get value => _box.read(key) ?? defaultValue;
+  T get value {
+    T? boxValue = _box.read(key);
+    if (values != null) {
+      if (boxValue == null) return defaultValue; // no value in box
+      if (values!.containsValue(boxValue) == false) {
+        return defaultValue;
+      }
+      return boxValue;
+    }
+    return boxValue ?? defaultValue;
+  }
 
   set value(T newValue) {
     if (value == newValue) return;
@@ -49,127 +58,98 @@ class Setting<T> extends ChangeNotifier implements ValueListenable<T> {
       child: SettingItem(setting: this, setState: setState));
 }
 
-abstract class AllSettings {
-  Setting<String> get locale;
-  Setting<bool> get darkMode;
-  Setting<bool> get filterNoChinese;
-  Setting<bool> get filterNoCHS;
-  Setting<double> get textScale;
-  Setting<String> get layoutOrientation;
-  Setting<String> get qBittorrentAPIUrl;
-  Setting<String> get animeProvider;
+class Settings {
+  static Setting<String> locale = Setting(
+    titleDelegate: () => trSettingLocale,
+    key: 'locale',
+    defaultValue: Get.deviceLocale?.languageCode ?? "zh",
+    values: {
+      () => "繁體中文": "zh",
+      () => "English": "en",
+    },
+    onChange: (value) => Get.updateLocale(Locale(value)),
+  );
 
-  List<Setting> get list;
-  AnimeProvider get currentAnimeProvider;
-  Future<void> reset();
-}
+  static Setting<bool> darkMode = Setting(
+    titleDelegate: () => trSettingDarkMode,
+    key: 'dark_mode',
+    defaultValue: false,
+    onChange: (value) =>
+        Get.changeThemeMode(value ? ThemeMode.dark : ThemeMode.light),
+  );
 
-class Settings implements AllSettings {
-  @override
-  Setting<String> get locale => Setting(
-        title: trSettingLocale,
-        key: 'locale',
-        defaultValue: Get.deviceLocale?.languageCode ?? "zh",
-        values: {
-          "繁體中文": "zh",
-          "English": "en",
-        },
-        onChange: (value) {
-          Get.updateLocale(Locale(value));
-        },
-      );
+  static Setting<double> textScale = Setting(
+    titleDelegate: () => trSettingTextScale,
+    key: 'text_scale',
+    defaultValue: AFPlatform.isMobile ? 0.8 : 1.0,
+    values: {
+      () => trSettingFontSmall: 0.8,
+      () => trSettingFontNormal: 1.0,
+      () => trSettingFontLarge: 1.2,
+    },
+    onChange: (value) {
+      Get.forceAppUpdate();
+    },
+  );
 
-  @override
-  Setting<bool> get darkMode => Setting(
-        title: trSettingDarkMode,
-        key: 'dark_mode',
-        defaultValue: false,
-        onChange: (value) {
-          Get.changeThemeMode(value ? ThemeMode.dark : ThemeMode.light);
-          Get.forceAppUpdate();
-        },
-      );
+  static Setting<String> layoutOrientation = Setting(
+      titleDelegate: () => trSettingLayoutOrientation,
+      key: 'layout_orientation',
+      defaultValue: "auto",
+      values: {
+        () => trSettingAuto: "auto",
+        () => trSettingPortrait: Orientation.portrait.toString(),
+        () => trSettingLandscape: Orientation.landscape.toString(),
+      });
 
-  @override
-  Setting<double> get textScale => Setting(
-        title: trSettingTextScale,
-        key: 'text_scale',
-        defaultValue: Platform.isIOS || Platform.isAndroid ? 0.8 : 1.0,
-        values: {
-          trSettingFontSmall: 0.8,
-          trSettingFontNormal: 1.0,
-          trSettingFontLarge: 1.2,
-        },
-        onChange: (value) {
-          Get.forceAppUpdate();
-        },
-      );
-
-  @override
-  Setting<String> get layoutOrientation => Setting(
-          title: trSettingLayoutOrientation,
-          key: 'layout_orientation',
-          defaultValue: "auto",
-          values: {
-            trSettingAuto: "auto",
-            trSettingPortrait: Orientation.portrait.toString(),
-            trSettingLandscape: Orientation.landscape.toString(),
-          });
-
-  @override
-  Setting<bool> get filterNoCHS => Setting(
-      title: trSettingFilterNoChs,
+  static Setting<bool> filterNoCHS = Setting(
+      titleDelegate: () => trSettingFilterNoChs,
       key: 'filter_no_chs',
       defaultValue: false,
       visibilityDelegate: () => filterNoChinese.value != true);
 
-  @override
-  Setting<bool> get filterNoChinese => Setting(
-      title: trSettingFilterNoChinese,
+  static Setting<bool> filterNoChinese = Setting(
+      titleDelegate: () => trSettingFilterNoChinese,
       key: 'filter_no_chinese',
       defaultValue: false);
 
-  @override
-  Setting<String> get qBittorrentAPIUrl => Setting(
-        title: trSettingQbittorrentApiUrl,
-        key: 'qbittorrent_api_url',
-        defaultValue: 'http://localhost:8080',
-        validator: RegExp(r'^https?://.+'),
-      );
+  static Setting<String> qBittorrentAPIUrl = Setting(
+    titleDelegate: () => trSettingQbittorrentApiUrl,
+    key: 'qbittorrent_api_url',
+    defaultValue: 'http://localhost:8080',
+    validator: RegExp(r'^https?://.+'),
+  );
 
-  @override
-  Setting<String> get animeProvider => Setting(
-          title: trSettingProvider,
-          key: 'anime_provider',
-          defaultValue: 'DMHY 動漫花園 [動漫]',
-          onChange: (_) async => await Get.forceAppUpdate(),
-          values: {
-            for (var entry in animeProviders.entries)
-              entry.value.name: entry.key
-          });
+  static Setting<String> animeProvider = Setting(
+      titleDelegate: () => trSettingProvider,
+      key: 'anime_provider',
+      defaultValue: animeProviders.entries.first.key,
+      values: {
+        for (var entry in animeProviders.entries)
+          () => entry.value.name: entry.key
+      },
+      onChange: (value) => HomePage.reloadNeeded.value = true);
 
-  @override
-  AnimeProvider get currentAnimeProvider =>
+  static AnimeProvider get currentAnimeProvider =>
       animeProviders[animeProvider.value]!;
 
-  @override
-  Future<void> reset() async {
+  static Future<void> reset() async {
     await GetStorage().erase();
     darkMode.value = darkMode.defaultValue;
   }
 
-  @override
-  List<Setting> get list => [
-        locale,
-        textScale,
-        layoutOrientation,
-        animeProvider,
-        darkMode,
-        filterNoChinese,
-        filterNoCHS,
-        qBittorrentAPIUrl,
-      ];
+  static List<Setting Function()> list = [
+    () => locale,
+    () => textScale,
+    () => layoutOrientation,
+    () => animeProvider,
+    () => darkMode,
+    () => filterNoChinese,
+    () => filterNoCHS,
+    () => qBittorrentAPIUrl,
+  ];
 
-  static Settings get instance => Settings();
   static const currentVersion = "v0.2.0";
 }
+
+final _box = GetStorage();

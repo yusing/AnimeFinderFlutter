@@ -20,7 +20,7 @@ class SearchResultPage extends StatelessWidget {
       ),
       body: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: AnimeList(future: Anime.search(keyword))),
+          child: AnimeList(animeListFuture: Anime.search(keyword))),
     );
   }
 }

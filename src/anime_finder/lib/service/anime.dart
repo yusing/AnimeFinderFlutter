@@ -4,9 +4,9 @@ import 'package:anime_finder/service/qbittorrent.dart';
 import 'package:anime_finder/service/settings.dart';
 import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/theme/style.dart';
-import 'package:flutter/widgets.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:transparent_image/transparent_image.dart';
 import 'package:webfeed/webfeed.dart';
 
 import 'anime_provider.dart';
@@ -49,12 +49,11 @@ class Anime {
       child: ClipRRect(
         borderRadius:
             const BorderRadius.all(Radius.circular(kAnimeCardBorderRadius)),
-        child: FadeInImage.memoryNetwork(
+        child: CachedNetworkImage(
             alignment: Alignment.center,
-            image: imageUrl ?? '',
-            placeholder: kTransparentImage,
-            imageErrorBuilder: (context, image, error) =>
-                const Visibility(visible: false, child: SizedBox()),
+            imageUrl: imageUrl ?? '',
+            placeholder: (context, url) => const CircularProgressIndicator(),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
             fit: BoxFit.scaleDown),
       ),
     );
@@ -90,9 +89,9 @@ class Anime {
   }
 
   static List<Anime> parseRssItems(Iterable<RssItem> items) {
-    final regFilter = Settings.instance.filterNoChinese.value
+    final regFilter = Settings.filterNoChinese.value
         ? RegExp(r'[^\u4e00-\u9fa5]')
-        : Settings.instance.filterNoCHS.value
+        : Settings.filterNoCHS.value
             ? RegExp(r'简体|CHS|GB')
             : null;
 
@@ -119,7 +118,7 @@ class Anime {
         'Content-Type': 'application/xml;charset=utf-8'
       });
       if (response.statusCode == 200) {
-        if (Settings.instance.currentAnimeProvider.feedType == FeedType.rss) {
+        if (Settings.currentAnimeProvider.feedType == FeedType.rss) {
           final rss = RssFeed.parse(utf8.decode(response.bodyBytes));
           return rss.items == null ? [] : parseRssItems(rss.items!);
         } else {
@@ -139,10 +138,10 @@ class Anime {
 
   static Future<List<Anime>> search(String keyword) async {
     return await getAnimes(
-        Settings.instance.currentAnimeProvider.searchUrlKeyword(keyword));
+        Settings.currentAnimeProvider.searchUrlKeyword(keyword));
   }
 
   static Future<List<Anime>> latestAnimes() async {
-    return await getAnimes(Settings.instance.currentAnimeProvider.latestUrl);
+    return await getAnimes(Settings.currentAnimeProvider.latestUrl);
   }
 }

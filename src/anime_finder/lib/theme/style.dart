@@ -14,7 +14,7 @@ const kSnackbarDuration = Duration(seconds: 1);
 const kSnackbarPosition = SnackPosition.BOTTOM;
 
 TextTheme get kCurrentTextTheme =>
-    Settings.instance.darkMode.value ? kDarkTextTheme : kLightTextTheme;
+    Settings.darkMode.value ? kDarkTextTheme : kLightTextTheme;
 
 TextStyle get kTitleLarge => kCurrentTextTheme.titleLarge!;
 TextStyle get kTitleMedium => kCurrentTextTheme.titleMedium!;
@@ -33,10 +33,12 @@ TextStyle get kLabelMedium => kCurrentTextTheme.labelMedium!;
 TextStyle get kLabelSmall => kCurrentTextTheme.labelSmall!;
 
 ColorScheme get currentColorScheme =>
-    Settings.instance.darkMode.value ? darkColorScheme : lightColorScheme;
+    Settings.darkMode.value ? darkColorScheme : lightColorScheme;
 
 Color get kBackgroundColor => currentColorScheme.background;
 Color get kOnBackgroundColor => currentColorScheme.onBackground;
-Color get kOnBackgroundColorDark => currentColorScheme.onBackground.withOpacity(0.8);
-Color get kOnBackgroundColorDarker => currentColorScheme.onBackground.withOpacity(0.6);
+Color get kOnBackgroundColorDark =>
+    currentColorScheme.onBackground.withOpacity(0.8);
+Color get kOnBackgroundColorDarker =>
+    currentColorScheme.onBackground.withOpacity(0.6);
 Color get kHighlightColor => currentColorScheme.primary;

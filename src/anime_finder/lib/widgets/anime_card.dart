@@ -27,10 +27,10 @@ class AnimeCard extends StatelessWidget {
               ),
             ]),
         alignment: Alignment.center,
-        child: (Settings.instance.layoutOrientation.value == "auto"
+        child: (Settings.layoutOrientation.value == "auto"
                     ? MediaQuery.of(context).orientation
                     : Orientation.values.where((ori) =>
-                        Settings.instance.layoutOrientation.value == ori.toString())) ==
+                        Settings.layoutOrientation.value == ori.toString())) ==
                 Orientation.portrait
             ? _verticalLayout()
             : _horizontalLayout(context),
@@ -95,7 +95,7 @@ class AnimeCard extends StatelessWidget {
         Visibility(
           visible: anime.provider != null,
           child: AutoSizeText(
-            '字幕組：' + (anime.provider ?? ''),
+            '字幕組：${anime.provider ?? ''}',
             style: kBodySmall,
             minFontSize: 9,
             maxLines: 1,

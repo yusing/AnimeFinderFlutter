@@ -27,7 +27,7 @@ void main() async {
   runApp(GetMaterialApp(
     theme: kLightThemeData,
     darkTheme: kDarkThemeData,
-    themeMode: Settings.instance.darkMode.value ? ThemeMode.dark : ThemeMode.light,
+    themeMode: Settings.darkMode.value ? ThemeMode.dark : ThemeMode.light,
     title: 'AnimeFinder',
     debugShowCheckedModeBanner: false,
     initialRoute: '/',
@@ -40,17 +40,18 @@ void main() async {
       GlobalCupertinoLocalizations.delegate,
     ],
     supportedLocales: const [Locale('zh'), Locale('en')],
-    locale: Locale(Settings.instance.locale.value),
+    locale: Locale(Settings.locale.value),
     fallbackLocale: const Locale('en'),
     translations: TranslationService(),
     builder: (BuildContext context, Widget? child) {
       final MediaQueryData data = MediaQuery.of(context);
       return MediaQuery(
         data: data.copyWith(
-            textScaleFactor: data.textScaleFactor * Settings.instance.textScale.value),
+            textScaleFactor: data.textScaleFactor * Settings.textScale.value),
         child: child ?? Container(),
       );
     },
+    
     scrollBehavior: AFScrollBehaviour(),
   ));
 }

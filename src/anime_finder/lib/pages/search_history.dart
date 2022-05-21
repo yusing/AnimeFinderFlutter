@@ -19,8 +19,8 @@ class _SearchHistoryPageState extends State<SearchHistoryPage> {
 
   @override
   void dispose() {
-    super.dispose();
     _searchBarController.dispose();
+    super.dispose();
   }
 
   @override

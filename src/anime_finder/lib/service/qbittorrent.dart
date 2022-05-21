@@ -152,7 +152,7 @@ enum Filter {
 
 class QBittorrent {
   static Uri endPointUri(String endPoint) {
-    return Uri.parse('${Settings.instance.qBittorrentAPIUrl.value}$endPoint');
+    return Uri.parse('${Settings.qBittorrentAPIUrl.value}$endPoint');
   }
 
   static Future<http.Response> get(String endPoint,

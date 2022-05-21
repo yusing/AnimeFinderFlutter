@@ -5,19 +5,14 @@ import 'package:anime_finder/widgets/anime_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class AnimeList extends StatefulWidget {
-  final Future<List<Anime>> future;
-  const AnimeList({super.key, required this.future});
+class AnimeList extends StatelessWidget {
+  final Future<List<Anime>> animeListFuture;
+  const AnimeList({super.key, required this.animeListFuture});
 
-  @override
-  State<AnimeList> createState() => _AnimeListState();
-}
-
-class _AnimeListState extends State<AnimeList> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Anime>>(
-      future: widget.future,
+      future: animeListFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
@@ -50,8 +45,8 @@ class _AnimeListState extends State<AnimeList> {
   }
 
   _showDownloadDialog(Anime anime) {
-    final _formKey = GlobalKey<FormState>();
-    final _filenameController = TextEditingController(text: anime.title);
+    final formKey = GlobalKey<FormState>();
+    final filenameController = TextEditingController(text: anime.title);
 
     Get.defaultDialog(
       contentPadding: const EdgeInsets.all(16),
@@ -59,12 +54,12 @@ class _AnimeListState extends State<AnimeList> {
       title: trConfirmation,
       titleStyle: kTitleMedium,
       content: Form(
-        key: _formKey,
+        key: formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextFormField(
-              controller: _filenameController,
+              controller: filenameController,
               style: kBodySmall,
               decoration: InputDecoration(
                 icon: const Icon(Icons.file_download),
@@ -86,10 +81,10 @@ class _AnimeListState extends State<AnimeList> {
         MaterialButton(
           child: Text(trDownload, style: kLabelSmall),
           onPressed: () {
-            if (!(_formKey.currentState?.validate() ?? false)) {
+            if (!(formKey.currentState?.validate() ?? false)) {
               return; // invalid input
             }
-            anime.download(_filenameController.text).then((value) {
+            anime.download(filenameController.text).then((value) {
               Get.snackbar(
                 trDownloadAdded,
                 anime.title ?? "",
@@ -115,6 +110,8 @@ class _AnimeListState extends State<AnimeList> {
         ),
       ],
       backgroundColor: kBackgroundColor,
-    );
+    ).then((value) {
+      filenameController.dispose();
+    });
   }
 }

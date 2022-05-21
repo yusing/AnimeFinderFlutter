@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:path/path.dart' as path;
 
-// TODO: allow to choose whether use provider's title or torrent's title
 class DownloadsPage extends StatefulWidget {
   const DownloadsPage({Key? key}) : super(key: key);
 
