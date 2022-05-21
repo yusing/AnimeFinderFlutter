@@ -1,6 +1,7 @@
 # AnimeFinder
 
 ACG資源搜尋、下載工具。
+[English version of ReadMe](README_EN.md)
 
 ## Build Status
 
@@ -14,6 +15,7 @@ ACG資源搜尋、下載工具。
 
 ## 重點功能
 
+- 支援中文及英文介面
 - 支持橫向和直向介面 (預設自動切換，可改為固定介面)
 - 支援以下站點瀏覽及搜尋:
   - [動漫花園](https://share.dmhy.org) (動漫、動漫音樂、遊戲、漫畫、日劇)
@@ -25,6 +27,7 @@ ACG資源搜尋、下載工具。
 
 - 支持自動過濾簡體字幕動漫 (測試)
 - 支持ACG資源下載(需要[qBittorrent v4.1+](https://www.qbittorrent.org/download.php))
+- *手機版本暫不支援下載功能*
 
 ## 介面展示
 
