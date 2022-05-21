@@ -22,8 +22,8 @@ class AnimeCard extends StatelessWidget {
             boxShadow: [
               BoxShadow(
                 color: kOnBackgroundColor.withOpacity(0.2),
-                spreadRadius: 4,
-                blurRadius: 5,
+                spreadRadius: 1,
+                blurRadius: 1,
               ),
             ]),
         alignment: Alignment.center,
@@ -42,7 +42,7 @@ class AnimeCard extends StatelessWidget {
     return SizedBox(
       height: 200,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(8),
         child: Row(
           children: [
             ConstrainedBox(

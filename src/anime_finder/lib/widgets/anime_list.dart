@@ -1,6 +1,7 @@
 import 'package:anime_finder/service/anime.dart';
 import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/theme/style.dart';
+import 'package:anime_finder/utils/show_toast.dart';
 import 'package:anime_finder/widgets/anime_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,7 +24,7 @@ class AnimeList extends StatelessWidget {
           }
           return ListView.separated(
               separatorBuilder: (context, index) => const SizedBox(
-                    height: 32,
+                    height: 16,
                   ),
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
@@ -84,24 +85,20 @@ class AnimeList extends StatelessWidget {
             if (!(formKey.currentState?.validate() ?? false)) {
               return; // invalid input
             }
-            anime.download(filenameController.text).then((value) {
-              Get.snackbar(
-                trDownloadAdded,
-                anime.title ?? "",
-                snackPosition: SnackPosition.BOTTOM,
-                backgroundColor: kBackgroundColor,
-                duration: kSnackbarDuration,
-              );
-            }).onError((e, st) {
-              Get.snackbar(
-                trDownloadError,
-                e.toString(),
-                snackPosition: SnackPosition.BOTTOM,
-                backgroundColor: kBackgroundColor,
+            anime.download(filenameController.text).then((_) async {
+              await showToast(
+                message: trDownloadAdded,
+                title: anime.title ?? "",
+              ).then((_) => Get.back());
+              
+            }).onError((e, st) async {
+              await showToast(
+                title: trDownloadError,
+                message: e.toString(),
                 duration: const Duration(seconds: 2),
-              );
+              ).then((_) => Get.back());
             });
-            Get.back(closeOverlays: true);
+            
           },
         ),
         MaterialButton(

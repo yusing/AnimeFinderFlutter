@@ -17,7 +17,7 @@ class AFPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(title, style: kTitleLarge), actions: actions),
+      appBar: AppBar(title: Text(title, style: kTitleLarge), actions: actions, toolbarHeight: 40),
       body: SafeArea(child: body),
       bottomNavigationBar: bottomNavigationBar,
     );

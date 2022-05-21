@@ -34,7 +34,7 @@ class _NavPageState extends State<NavPage> {
     return AFPage(
       title: 'AnimeFinder',
       body: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(16.0),
         child: PageView(controller: _pageController, children: const [
           HomePage(),
           DownloadsPage(),

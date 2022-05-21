@@ -15,6 +15,7 @@ class TranslationService extends Translations {
           'page_nth_yet': 'Nothing here...',
           'resume_dl': 'Resume download',
           'pause_dl': 'Pause download',
+          
           'open_file': 'Open file',
           'open_file_location': 'Open file location',
           'delete': 'Delete',
@@ -105,6 +106,7 @@ class TranslationService extends Translations {
           'page_nth_yet': '這裡什麼都沒有...',
           'resume_dl': '繼續下載',
           'pause_dl': '暫停下載',
+
           'open_file': '開啟檔案',
           'open_file_location': '開啟檔案位置',
           'delete': '刪除',
@@ -197,6 +199,7 @@ String get trConnectionError => 'connection_error'.tr;
 String get trPageNothingYet => 'page_nth_yet'.tr;
 String get trResumeDl => 'resume_dl'.tr;
 String get trPauseDl => 'pause_dl'.tr;
+
 String get trOpenFile => 'open_file'.tr;
 String get trOpenFileLocation => 'open_file_location'.tr;
 String get trDelete => 'delete'.tr;

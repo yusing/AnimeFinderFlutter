@@ -7,6 +7,7 @@ import 'package:anime_finder/theme/style.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:transparent_image/transparent_image.dart';
 import 'package:webfeed/webfeed.dart';
 
 import 'anime_provider.dart';
@@ -52,7 +53,9 @@ class Anime {
         child: CachedNetworkImage(
             alignment: Alignment.center,
             imageUrl: imageUrl ?? '',
-            placeholder: (context, url) => const CircularProgressIndicator(),
+            placeholder: (context, url) => FadeInImage(
+                placeholder: MemoryImage(kTransparentImage),
+                image: MemoryImage(kTransparentImage)),
             errorWidget: (context, url, error) => const Icon(Icons.error),
             fit: BoxFit.scaleDown),
       ),

@@ -12,7 +12,6 @@ class SettingsPage extends StatelessWidget {
     final settings = Settings.list;
     return StatefulBuilder(
       builder: (context, setState) => ListView.builder(
-        physics: const NeverScrollableScrollPhysics(),
         itemCount: settings.length + 2,
         itemBuilder: (context, index) {
           if (index < settings.length) {

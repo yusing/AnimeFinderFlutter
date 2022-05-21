@@ -1,6 +1,6 @@
 import 'package:anime_finder/pages/search_result.dart';
 import 'package:anime_finder/service/translation.dart';
-import 'package:anime_finder/theme/style.dart';
+import 'package:anime_finder/utils/show_toast.dart';
 import 'package:anime_finder/widgets/search_bar.dart';
 import 'package:anime_finder/widgets/search_history_listview.dart';
 import 'package:flutter/material.dart';
@@ -42,13 +42,8 @@ class _SearchHistoryPageState extends State<SearchHistoryPage> {
     }
 
     if (_searchBarController.text.isEmpty) {
-      Get.snackbar(
-        trSearchbarEmpty,
-        '',
-        duration: kSnackbarDuration,
-        snackPosition: kSnackbarPosition,
-        backgroundColor: kBackgroundColor,
-        colorText: kOnBackgroundColor,
+      showToast(
+        message: trSearchbarEmpty,
       );
       return;
     }
