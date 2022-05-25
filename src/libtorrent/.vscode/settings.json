@@ -1,0 +1,18 @@
+{
+    "C_Cpp.default.configurationProvider": "go2sh.cmake-integration",
+    "files.associations": {
+        "vector": "cpp",
+        "filesystem": "cpp",
+        "stdint.h": "c",
+        "coroutine": "cpp",
+        "ios": "cpp",
+        "chrono": "cpp",
+        "array": "cpp",
+        "string": "cpp",
+        "string_view": "cpp",
+        "locale": "cpp",
+        "limits": "cpp",
+        "__config": "cpp",
+        "*.ipp": "c"
+    },
+}
