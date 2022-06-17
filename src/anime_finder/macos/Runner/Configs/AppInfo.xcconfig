@@ -11,4 +11,4 @@ PRODUCT_NAME = anime_finder
 PRODUCT_BUNDLE_IDENTIFIER = com.yusing.animeFinder
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2022 Yusing All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2022 com.yusing. All rights reserved.

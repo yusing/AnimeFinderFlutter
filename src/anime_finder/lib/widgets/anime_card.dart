@@ -1,5 +1,6 @@
 import 'package:anime_finder/service/anime.dart';
 import 'package:anime_finder/service/settings.dart';
+import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/theme/style.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -86,7 +87,7 @@ class AnimeCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         AutoSizeText(
-          anime.title ?? "沒有標題",
+          anime.title ?? "(NULL)",
           style: kTitleSmall,
           maxLines: 4,
           overflow: TextOverflow.ellipsis,
@@ -95,7 +96,7 @@ class AnimeCard extends StatelessWidget {
         Visibility(
           visible: anime.provider != null,
           child: AutoSizeText(
-            '字幕組：${anime.provider ?? ''}',
+            '$trProvider: ${anime.provider ?? ''}',
             style: kBodySmall,
             minFontSize: 9,
             maxLines: 1,

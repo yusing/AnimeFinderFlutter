@@ -1,10 +1,13 @@
 import 'package:anime_finder/service/anime.dart';
+import 'package:anime_finder/service/libtorrent.dart';
 import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/theme/style.dart';
 import 'package:anime_finder/utils/show_toast.dart';
 import 'package:anime_finder/widgets/anime_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class AnimeList extends StatelessWidget {
   final Future<List<Anime>> animeListFuture;
@@ -23,14 +26,16 @@ class AnimeList extends StatelessWidget {
             );
           }
           return ListView.separated(
-              separatorBuilder: (context, index) => const SizedBox(
+              separatorBuilder: (_, index) => const SizedBox(
                     height: 16,
                   ),
               itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
+              itemBuilder: (_, index) {
                 final anime = snapshot.data![index];
                 return AnimeCard(
-                    anime: anime, onTap: () => _showDownloadDialog(anime));
+                    anime: anime,
+                    onTap: () => _showDownloadDialog(
+                        anime, MediaQuery.of(context).size));
               });
         } else if (snapshot.hasError) {
           return Center(
@@ -45,70 +50,48 @@ class AnimeList extends StatelessWidget {
     );
   }
 
-  _showDownloadDialog(Anime anime) {
-    final formKey = GlobalKey<FormState>();
-    final filenameController = TextEditingController(text: anime.title);
-
+  _showDownloadDialog(Anime anime, Size size) {
     Get.defaultDialog(
       contentPadding: const EdgeInsets.all(16),
       radius: 12,
-      title: trConfirmation,
+      title: trAbout,
       titleStyle: kTitleMedium,
-      content: Form(
-        key: formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextFormField(
-              controller: filenameController,
-              style: kBodySmall,
-              decoration: InputDecoration(
-                icon: const Icon(Icons.file_download),
-                labelText: trFilename,
-                labelStyle: kBodyMedium,
-                contentPadding: const EdgeInsets.only(bottom: 8),
-              ),
-              validator: (value) {
-                if (value?.isEmpty ?? false) {
-                  return trFilenameEmptyError;
-                }
-                return null;
-              },
-            ),
-          ],
+      content: Container(
+        width: double.infinity,
+        height: double.infinity,
+        constraints: BoxConstraints.loose(Size(
+          size.width * 0.8,
+          size.height * 0.6,
+        )),
+        child: SingleChildScrollView(
+          child: Html(
+            data: anime.misc,
+            shrinkWrap: true,
+            onLinkTap: (url, _, __, ___) async {
+              if (url != null && await canLaunchUrlString(url)) {
+                await launchUrlString(url);
+              }
+            },
+          ),
         ),
       ),
-      actions: [
-        MaterialButton(
-          child: Text(trDownload, style: kLabelSmall),
-          onPressed: () {
-            if (!(formKey.currentState?.validate() ?? false)) {
-              return; // invalid input
-            }
-            anime.download(filenameController.text).then((_) async {
-              await showToast(
-                message: trDownloadAdded,
-                title: anime.title ?? "",
-              ).then((_) => Get.back());
-              
-            }).onError((e, st) async {
-              await showToast(
-                title: trDownloadError,
-                message: e.toString(),
-                duration: const Duration(seconds: 2),
-              ).then((_) => Get.back());
-            });
-            
-          },
-        ),
-        MaterialButton(
-          child: Text(trCancel, style: kLabelSmall),
-          onPressed: () => Get.back(),
-        ),
-      ],
+      confirm: ElevatedButton(
+        child: Text(trDownload, style: kLabelSmall),
+        onPressed: () async {
+          if (anime.magnetUrl == null) {
+            await showToast(message: trNoMagnetUrl, title: trDownloadError);
+            return;
+          }
+          Get.back(); // close dialog
+          showToast(message: trDownloadAdded, title: anime.title ?? "");
+          await addTorrent(anime.title ?? anime.magnetUrl!, anime.magnetUrl!);
+        },
+      ),
+      cancel: ElevatedButton(
+        child: Text(trCancel, style: kLabelSmall),
+        onPressed: () => Get.back(), // close dialog
+      ),
       backgroundColor: kBackgroundColor,
-    ).then((value) {
-      filenameController.dispose();
-    });
+    );
   }
 }

@@ -1,17 +1,27 @@
-import 'package:get_storage/get_storage.dart';
+import 'dart:convert';
+
+import 'package:anime_finder/service/storage.dart';
+import 'package:flutter/foundation.dart';
 
 class SearchHistory {
-  static final _box = GetStorage();
-
   static List<String> fetch() {
-    var history = _box.read<String>('searchHistory');
-    if (history == null || history.isEmpty) {
+    String? historyJson = getPref<String>('searchHistory');
+    if (historyJson == null) {
       return [];
     }
-    return history.split('\n');
+    try {
+      return (jsonDecode(historyJson) as List).map((e) => e as String).toList();
+    } catch (e) {
+      debugPrint(e.toString());
+      return [];
+    }
   }
 
-  static void add(String keyword) {
+  static Future<void> _save(List<String> history) async {
+    await setPref('searchHistory', jsonEncode(history));
+  }
+
+  static Future<void> add(String keyword) async {
     final history = fetch();
     if (history.length >= 20) {
       history.removeLast();
@@ -20,12 +30,13 @@ class SearchHistory {
       return;
     }
     history.insert(0, keyword);
-    _box.write('searchHistory', history.join('\n'));
+    await _save(history);
+    debugPrint('Added $keyword to search history');
   }
 
-  static void remove(int index) {
+  static Future<void> remove(int index) async {
     final history = fetch();
     history.removeAt(index);
-    _box.write('searchHistory', history.join('\n'));
+    await _save(history);
   }
 }

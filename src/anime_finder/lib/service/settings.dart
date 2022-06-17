@@ -1,11 +1,11 @@
 import 'package:anime_finder/pages/home.dart';
 import 'package:anime_finder/service/anime_provider.dart';
+import 'package:anime_finder/service/storage.dart';
 import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/widgets/setting_item.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 import 'anime_providers.dart';
 import 'platform.dart';
@@ -28,24 +28,23 @@ class Setting<T> {
       this.onChange,
       this.values,
       this.validator,
-      this.visibilityDelegate})
-      : super();
+      this.visibilityDelegate});
 
   T get value {
-    T? boxValue = _box.read(key);
+    T? prefValue = getPref(key);
     if (values != null) {
-      if (boxValue == null) return defaultValue; // no value in box
-      if (values!.containsValue(boxValue) == false) {
+      if (prefValue == null) return defaultValue; // no value in box
+      if (values!.containsValue(prefValue) == false) {
         return defaultValue;
       }
-      return boxValue;
+      return prefValue;
     }
-    return boxValue ?? defaultValue;
+    return prefValue ?? defaultValue;
   }
 
   set value(T newValue) {
     if (value == newValue) return;
-    _box.write(key, newValue).then((_) {
+    setPref(key, newValue).then((_) {
       onChange?.call(newValue);
     });
   }
@@ -71,12 +70,13 @@ class Settings {
   );
 
   static Setting<bool> darkMode = Setting(
-    titleDelegate: () => trSettingDarkMode,
-    key: 'dark_mode',
-    defaultValue: false,
-    onChange: (value) =>
-        Get.changeThemeMode(value ? ThemeMode.dark : ThemeMode.light),
-  );
+      titleDelegate: () => trSettingDarkMode,
+      key: 'dark_mode',
+      defaultValue: ThemeMode.system == ThemeMode.dark,
+      onChange: (value) async {
+        Get.changeThemeMode(value ? ThemeMode.dark : ThemeMode.light);
+        await Get.forceAppUpdate();
+      });
 
   static Setting<double> textScale = Setting(
     titleDelegate: () => trSettingTextScale,
@@ -87,8 +87,8 @@ class Settings {
       () => trSettingFontNormal: 1.0,
       () => trSettingFontLarge: 1.2,
     },
-    onChange: (value) {
-      Get.forceAppUpdate();
+    onChange: (value) async {
+      await Get.forceAppUpdate();
     },
   );
 
@@ -113,13 +113,6 @@ class Settings {
       key: 'filter_no_chinese',
       defaultValue: false);
 
-  static Setting<String> qBittorrentAPIUrl = Setting(
-    titleDelegate: () => trSettingQbittorrentApiUrl,
-    key: 'qbittorrent_api_url',
-    defaultValue: 'http://localhost:8080',
-    validator: RegExp(r'^https?://.+'),
-  );
-
   static Setting<String> animeProvider = Setting(
       titleDelegate: () => trSettingProvider,
       key: 'anime_provider',
@@ -134,7 +127,7 @@ class Settings {
       animeProviders[animeProvider.value]!;
 
   static Future<void> reset() async {
-    await GetStorage().erase();
+    await clearStorage();
     darkMode.value = darkMode.defaultValue;
   }
 
@@ -145,11 +138,8 @@ class Settings {
     () => animeProvider,
     () => darkMode,
     () => filterNoChinese,
-    () => filterNoCHS,
-    () => qBittorrentAPIUrl,
+    () => filterNoCHS
   ];
 
   static const currentVersion = "v0.2.0";
 }
-
-final _box = GetStorage();

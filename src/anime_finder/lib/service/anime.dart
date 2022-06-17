@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:anime_finder/service/qbittorrent.dart';
+// import 'package:anime_finder/service/qbittorrent.dart.old';
 import 'package:anime_finder/service/settings.dart';
 import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/theme/style.dart';
@@ -12,15 +12,12 @@ import 'package:webfeed/webfeed.dart';
 
 import 'anime_provider.dart';
 
-const jikanBaseUrl = 'https://api.jikan.moe/v4/anime/';
-
 class Anime {
   final String? provider;
   final String? title;
   final String? misc;
   final String? magnetUrl;
   String? _imageUrl;
-  // String? _description;
   Widget? _image;
 
   Anime({
@@ -45,50 +42,20 @@ class Anime {
   }
 
   Widget image() {
-    _image ??= Visibility(
-      visible: imageUrl != null,
-      child: ClipRRect(
-        borderRadius:
-            const BorderRadius.all(Radius.circular(kAnimeCardBorderRadius)),
-        child: CachedNetworkImage(
-            alignment: Alignment.center,
-            imageUrl: imageUrl ?? '',
-            placeholder: (context, url) => FadeInImage(
-                placeholder: MemoryImage(kTransparentImage),
-                image: MemoryImage(kTransparentImage)),
-            errorWidget: (context, url, error) => const Icon(Icons.error),
-            fit: BoxFit.scaleDown),
-      ),
+    if (imageUrl == null) {
+      return const SizedBox();
+    }
+    _image ??= ClipRRect(
+      borderRadius:
+          const BorderRadius.all(Radius.circular(kAnimeCardBorderRadius)),
+      child: CachedNetworkImage(
+          alignment: Alignment.center,
+          imageUrl: imageUrl!,
+          placeholder: (context, url) => Image.memory(kTransparentImage ),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
+          fit: BoxFit.scaleDown),
     );
     return _image!;
-  }
-
-  // Future<String> get description async {
-  //   if (_description == null) {
-  //     final response = await http.get(Uri.parse('$jikanBaseUrl?q=$title'));
-  //     try {
-  //       final data = jsonDecode(utf8.decode(response.bodyBytes))['data'][0];
-  //       _description =
-  //           "${data['title_japanese'] ?? ""} - ${data['title_english'] ?? ""}\n\n${data['synopsis']}";
-  //     } catch (e, st) {
-  //       debugPrint(e.toString());
-  //       debugPrintStack(stackTrace: st);
-  //       _description = "找不到動漫簡介 :(";
-  //     }
-  //   }
-  //   return _description!;
-  // }
-
-  Future<void> download(String? newName) async {
-    if (magnetUrl == null) {
-      return Future.error(trNoMagnetUrl);
-    }
-    try {
-      await QBittorrent.addTorrent(
-          urls: [magnetUrl!], category: 'AnimeFinder', rename: newName);
-    } catch (e) {
-      return Future.error(e.toString());
-    }
   }
 
   static List<Anime> parseRssItems(Iterable<RssItem> items) {
@@ -125,7 +92,6 @@ class Anime {
           final rss = RssFeed.parse(utf8.decode(response.bodyBytes));
           return rss.items == null ? [] : parseRssItems(rss.items!);
         } else {
-          // TODO: support atom if needed
           throw UnimplementedError();
         }
       } else {

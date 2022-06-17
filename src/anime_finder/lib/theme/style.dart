@@ -11,7 +11,7 @@ const double kAnimeCardImageMaxHeight = 50;
 const double kAnimeCardVImagePadding = 32;
 const double kIconButtonSplashRadius = 24;
 const kSnackbarDuration = Duration(seconds: 1);
-const kSnackbarPosition = SnackPosition.BOTTOM;
+const kSnackbarPosition = SnackPosition.TOP;
 
 TextTheme get kCurrentTextTheme =>
     Settings.darkMode.value ? kDarkTextTheme : kLightTextTheme;
@@ -42,3 +42,4 @@ Color get kOnBackgroundColorDark =>
 Color get kOnBackgroundColorDarker =>
     currentColorScheme.onBackground.withOpacity(0.6);
 Color get kHighlightColor => currentColorScheme.primary;
+Color get kHighlightColorAlt => currentColorScheme.secondary;

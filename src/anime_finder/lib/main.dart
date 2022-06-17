@@ -1,39 +1,41 @@
 import 'dart:io';
 
+import 'package:anime_finder/service/libtorrent.dart';
+import 'package:anime_finder/service/storage.dart';
 import 'package:anime_finder/service/translation.dart';
+import 'package:anime_finder/utils/http.dart';
 import 'package:flutter/gestures.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:anime_finder/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'pages/nav.dart';
 import 'service/settings.dart';
 
-class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-  }
-}
-
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  await initStorage();
+
   HttpOverrides.global = MyHttpOverrides();
-  await GetStorage.init();
+  if (Platform.isAndroid) {
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }
+    debugPrint('Permission is required for downloading');
+  }
+  await initLibTorrent();
+
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(GetMaterialApp(
     theme: kLightThemeData,
     darkTheme: kDarkThemeData,
     themeMode: Settings.darkMode.value ? ThemeMode.dark : ThemeMode.light,
     title: 'AnimeFinder',
     debugShowCheckedModeBanner: false,
-    initialRoute: '/',
-    routes: {
-      '/': (context) => const NavPage(),
-    },
+    home: const NavPage(),
     localizationsDelegates: const [
       GlobalMaterialLocalizations.delegate,
       GlobalWidgetsLocalizations.delegate,
@@ -51,7 +53,6 @@ void main() async {
         child: child ?? Container(),
       );
     },
-    
     scrollBehavior: AFScrollBehaviour(),
   ));
 }

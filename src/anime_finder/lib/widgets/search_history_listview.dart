@@ -65,12 +65,10 @@ class _SearchHistoryListViewState extends State<SearchHistoryListView> {
                 ),
                 IconButton(
                   splashRadius: 24,
-                  icon: Icon(Icons.delete,
-                      color: kOnBackgroundColorDark),
-                  onPressed: () {
-                    setState(() {
-                      SearchHistory.remove(index);
-                    });
+                  icon: Icon(Icons.delete, color: kOnBackgroundColorDark),
+                  onPressed: () async {
+                    await SearchHistory.remove(index);
+                    setState(() {});
                   },
                 ),
               ],

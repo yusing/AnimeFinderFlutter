@@ -7,14 +7,21 @@ class TranslationService extends Translations {
   Map<String, Map<String, String>> get keys => {
         'en': {
           'colon': ':',
-          'qbt_error_msg':
-              'Unable to communicate with qBittorrent\nPlease check your connection',
           'no_magnet_url': 'No magnet URL found for this item',
           'connection_error': 'Connection error',
 
           'page_nth_yet': 'Nothing here...',
           'resume_dl': 'Resume download',
           'pause_dl': 'Pause download',
+          'video_not_ready': 'Not ready to be played yet, please try again later',
+          'num_files': 'Files',
+          'playback_speed': 'Playback speed',
+          'audio_track': 'Audio track',
+          'subtitle': 'Subtitle',
+          'default': 'Default',
+          'unsupported_file_type': 'Unsupported file type',
+          'last_watched_to': 'Last watched to', 
+          'file_not_exists': 'File not exists',
           
           'open_file': 'Open file',
           'open_file_location': 'Open file location',
@@ -25,29 +32,10 @@ class TranslationService extends Translations {
 
           'home': 'Home',
           'downloads': 'Downloads',
+          'history': 'History',
           'settings': 'Settings',
 
           'version': 'Current Version: ${Settings.currentVersion}',
-          // qbittorrent states
-          "error": "Error",
-          "missingFiles": "Missing File",
-          "uploading": "Finished",
-          "pausedUP": "Finished",
-          "queuedUP": "Finished",
-          "stalledUP": "Finished",
-          "checkingUP": "Verifying",
-          "forcedUP": "Finished",
-          "allocating": "Allocating",
-          "downloading": "Downloading",
-          "metaDL": "Downloading",
-          "pausedDL": "Paused",
-          "queuedDL": "Queued",
-          "stalledDL": "Downloading (no connection)",
-          "checkingDL": "Verifying",
-          "forcedDL": "Downloading",
-          "checkingResumeData": "Verifying",
-          "moving": "Moving",
-          "unknown": "Unknown",
 
           // settings
           'locale': 'Language',
@@ -56,7 +44,6 @@ class TranslationService extends Translations {
           'layout_orientation': 'UI Orientation',
           'filter_no_chs': 'Filter Simplified Chinese Content',
           'filter_no_chinese': 'Filter All Chinese Content',
-          'qbittorrent_api_url': 'qBittorrent Endpoint',
           'provider': 'Provider',
           'reset_all_settings': 'Reset all settings',
           'reset_all_settings_confirm':
@@ -71,6 +58,7 @@ class TranslationService extends Translations {
           'portrait': 'Portrait',
           'landscape': 'Landscape',
 
+          'about': 'About',
           'confirm': 'Confirm',
           'confirmation': 'Confirmation',
           'confirm_dl': 'Are you sure you want to download this file?',
@@ -99,13 +87,21 @@ class TranslationService extends Translations {
         },
         'zh': {
           'colon': '：',
-          'qbt_error_msg': "無法與qBittorrent連接\n請檢查網路及qBittorrent是否已開啟",
           'no_magnet_url': '沒有為此項目找到磁力連結',
           'connection_error': '連線錯誤',
 
           'page_nth_yet': '這裡什麼都沒有...',
           'resume_dl': '繼續下載',
           'pause_dl': '暫停下載',
+          'video_not_ready': '暫未能播放，請稍候再試',
+          'num_files': '個檔案',
+          'playback_speed': '播放速度',
+          'audio_track': '音訊軌道',
+          'subtitle': '字幕',
+          'default': '預設',
+          'unsupported_file_type': '不支援的檔案類型',
+          'last_watched_to': '上次觀看至',
+          'file_not_exists': '檔案不存在',
 
           'open_file': '開啟檔案',
           'open_file_location': '開啟檔案位置',
@@ -116,30 +112,10 @@ class TranslationService extends Translations {
 
           'home': '首頁',
           'downloads': '下載',
+          'history': '觀看紀錄',
           'settings': '設定',
 
           'version': '當前版本：${Settings.currentVersion}',
-
-          // qBittorrent 狀態
-          "error": "錯誤",
-          "missingFiles": "檔案遺失",
-          "uploading": "完成",
-          "pausedUP": "完成",
-          "queuedUP": "完成",
-          "stalledUP": "完成",
-          "checkingUP": "驗證中",
-          "forcedUP": "完成",
-          "allocating": "分配中",
-          "downloading": "下載中",
-          "metaDL": "下載中",
-          "pausedDL": "暫停",
-          "queuedDL": "排隊中",
-          "stalledDL": "下載中 (無連線)",
-          "checkingDL": "驗證中",
-          "forcedDL": "下載中",
-          "checkingResumeData": "驗證中",
-          "moving": "移動中",
-          "unknown": "未知",
 
           // Settings
           'locale': '語言',
@@ -148,7 +124,6 @@ class TranslationService extends Translations {
           'layout_orientation': '界面佈局',
           'filter_no_chs': '過濾簡體中文內容',
           'filter_no_chinese': '過濾所有中文內容',
-          'qbittorrent_api_url': 'qBittorrent 接入點',
           'provider': '提供者',
           'reset_all_settings': '重置所有設定',
           'reset_all_settings_confirm': '確定要重置所有設定嗎？',
@@ -162,6 +137,7 @@ class TranslationService extends Translations {
           'portrait': '縱向',
           'landscape': '橫向',
 
+          'about': '關於',
           'confirm': '確認',
           'confirmation': '確認',
           'confirm_dl': '確定要下載此檔案嗎？',
@@ -192,13 +168,21 @@ class TranslationService extends Translations {
 }
 
 String get trColon => 'colon'.tr;
-String get trQbtErrorMsg => 'qbt_error_msg'.tr;
 String get trNoMagnetUrl => 'no_magnet_url'.tr;
 String get trConnectionError => 'connection_error'.tr;
 
 String get trPageNothingYet => 'page_nth_yet'.tr;
 String get trResumeDl => 'resume_dl'.tr;
 String get trPauseDl => 'pause_dl'.tr;
+String get trNumFiles => 'num_files'.tr;
+String get trPlaybackSpeed => 'playback_speed'.tr;
+String get trAudioTrack => 'audio_track'.tr;
+String get trSubtitle => 'subtitle'.tr;
+String get trDefault => 'default'.tr;
+String get trUnsupportedFileType => 'unsupported_file_type'.tr;
+String get trLastWatchedTo => 'last_watched_to'.tr;
+String get trFileNotExists => 'file_not_exists'.tr;
+String get trProvider => 'provider'.tr;
 
 String get trOpenFile => 'open_file'.tr;
 String get trOpenFileLocation => 'open_file_location'.tr;
@@ -209,6 +193,7 @@ String get trNoSearchHistory => 'no_search_history'.tr;
 
 String get trHome => 'home'.tr;
 String get trDownloads => 'downloads'.tr;
+String get trHistory => 'history'.tr;
 String get trSettings => 'settings'.tr;
 
 String get trSettingLocale => 'locale'.tr;
@@ -217,7 +202,6 @@ String get trSettingTextScale => 'text_scale'.tr;
 String get trSettingLayoutOrientation => 'layout_orientation'.tr;
 String get trSettingFilterNoChs => 'filter_no_chs'.tr;
 String get trSettingFilterNoChinese => 'filter_no_chinese'.tr;
-String get trSettingQbittorrentApiUrl => 'qbittorrent_api_url'.tr;
 String get trSettingProvider => 'provider'.tr;
 String get trSettingResetAllSettings => 'reset_all_settings'.tr;
 String get trSettingResetAllSettingsConfirm => 'reset_all_settings_confirm'.tr;
@@ -231,6 +215,7 @@ String get trSettingAuto => 'auto'.tr;
 String get trSettingPortrait => 'portrait'.tr;
 String get trSettingLandscape => 'landscape'.tr;
 
+String get trAbout => 'about'.tr;
 String get trConfirm => 'confirm'.tr;
 String get trConfirmation => 'confirmation'.tr;
 String get trConfirmDl => 'confirm_dl'.tr;

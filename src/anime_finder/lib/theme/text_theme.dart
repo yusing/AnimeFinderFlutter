@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'lib_color_schemes.g.dart';
 
 TextTheme textTheme(ColorScheme colorScheme) =>
-    GoogleFonts.droidSansTextTheme(TextTheme(
+    GoogleFonts.notoSansTextTheme(TextTheme(
         displayLarge: TextStyle(
           fontSize: 21,
           fontWeight: FontWeight.bold,

@@ -1,4 +1,5 @@
 import 'package:anime_finder/pages/search_result.dart';
+import 'package:anime_finder/service/search_history.dart';
 import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/utils/show_toast.dart';
 import 'package:anime_finder/widgets/search_bar.dart';
@@ -34,7 +35,7 @@ class _SearchHistoryPageState extends State<SearchHistoryPage> {
     );
   }
 
-  void _performSearch() {
+  Future<void> _performSearch() async {
     FocusScopeNode currentFocus = FocusScope.of(context);
 
     if (!currentFocus.hasPrimaryFocus) {
@@ -42,12 +43,12 @@ class _SearchHistoryPageState extends State<SearchHistoryPage> {
     }
 
     if (_searchBarController.text.isEmpty) {
-      showToast(
+      await showToast(
         message: trSearchbarEmpty,
       );
       return;
     }
-
-    Get.to(() => SearchResultPage(keyword: _searchBarController.text));
+    await SearchHistory.add(_searchBarController.text);
+    await Get.off(() => SearchResultPage(keyword: _searchBarController.text));
   }
 }

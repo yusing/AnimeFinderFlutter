@@ -1,2 +1,11 @@
 build
 .DS_Store
+arm64
+x86_64
+stage
+bin
+bin.v2
+examples
+docs
+doc
+demos

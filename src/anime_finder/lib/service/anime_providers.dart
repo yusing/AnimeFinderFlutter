@@ -2,17 +2,17 @@ import 'anime_provider.dart';
 import 'translation.dart';
 
 Map<String, AnimeProvider> get animeProviders => {
-      'DMHY 動漫花園 [所有類別]': AnimeProvider(
-        name: 'DMHY 動漫花園 [$trAllCategories]',
-        searchUrl:
-            'https://share.dmhy.org/topics/rss/rss.xml?keyword=%q&order=date-desc',
-        latestUrl: 'https://share.dmhy.org/topics/rss/rss.xml',
-      ),
       'DMHY 動漫花園 [動漫]': AnimeProvider(
         name: 'DMHY 動漫花園 [$trAnime]',
         searchUrl:
             'https://share.dmhy.org/topics/rss/rss.xml?keyword=%q&sort_id=2&order=date-desc',
         latestUrl: 'https://share.dmhy.org/topics/rss/sort_id/2/rss.xml',
+      ),
+      'DMHY 動漫花園 [所有類別]': AnimeProvider(
+        name: 'DMHY 動漫花園 [$trAllCategories]',
+        searchUrl:
+            'https://share.dmhy.org/topics/rss/rss.xml?keyword=%q&order=date-desc',
+        latestUrl: 'https://share.dmhy.org/topics/rss/rss.xml',
       ),
       'DMHY 動漫花園 [動漫音樂]': AnimeProvider(
         name: 'DMHY 動漫花園 [$trAnimeSongs]',
