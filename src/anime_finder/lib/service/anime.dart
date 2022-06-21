@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-// import 'package:anime_finder/service/qbittorrent.dart.old';
 import 'package:anime_finder/service/settings.dart';
 import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/theme/style.dart';
@@ -9,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:transparent_image/transparent_image.dart';
 import 'package:webfeed/webfeed.dart';
-
-import 'anime_provider.dart';
 
 class Anime {
   final String? provider;
@@ -29,29 +26,24 @@ class Anime {
 
   String? get imageUrl {
     if (_imageUrl == null) {
-      if (misc == null) {
-        return null;
-      }
+      if (misc == null) return null;
       final match = RegExp(r'<img.*?src="(.*?)"').firstMatch(misc!);
-      if (match == null) {
-        return null;
-      }
+      if (match == null) return null;
       _imageUrl = match.group(1);
     }
     return _imageUrl;
   }
 
   Widget image() {
-    if (imageUrl == null) {
-      return const SizedBox();
-    }
+    if (imageUrl == null) return const SizedBox();
     _image ??= ClipRRect(
       borderRadius:
           const BorderRadius.all(Radius.circular(kAnimeCardBorderRadius)),
       child: CachedNetworkImage(
-          alignment: Alignment.center,
+          alignment: Alignment.topCenter,
           imageUrl: imageUrl!,
-          placeholder: (context, url) => Image.memory(kTransparentImage ),
+          useOldImageOnUrlChange: true,
+          placeholder: (context, url) => Image.memory(kTransparentImage),
           errorWidget: (context, url, error) => const Icon(Icons.error),
           fit: BoxFit.scaleDown),
     );
@@ -81,19 +73,15 @@ class Anime {
     ];
   }
 
-  static Future<List<Anime>> getAnimes(String url) async {
+  static Future<List<Anime>> getAnimeList(String url) async {
     try {
       final response = await http.get(Uri.parse(url), headers: {
         'encoding': 'utf-8',
         'Content-Type': 'application/xml;charset=utf-8'
       });
       if (response.statusCode == 200) {
-        if (Settings.currentAnimeProvider.feedType == FeedType.rss) {
-          final rss = RssFeed.parse(utf8.decode(response.bodyBytes));
-          return rss.items == null ? [] : parseRssItems(rss.items!);
-        } else {
-          throw UnimplementedError();
-        }
+        final rss = RssFeed.parse(utf8.decode(response.bodyBytes));
+        return rss.items == null ? [] : parseRssItems(rss.items!);
       } else {
         debugPrint(utf8.decode(response.bodyBytes));
         throw Exception(trConnectionError);
@@ -106,11 +94,23 @@ class Anime {
   }
 
   static Future<List<Anime>> search(String keyword) async {
-    return await getAnimes(
+    return await getAnimeList(
         Settings.currentAnimeProvider.searchUrlKeyword(keyword));
   }
 
-  static Future<List<Anime>> latestAnimes() async {
-    return await getAnimes(Settings.currentAnimeProvider.latestUrl);
+  static Future<List<Anime>> latestAnime() async {
+    return await getAnimeList(Settings.currentAnimeProvider.latestUrl);
   }
+}
+
+class AnimeProvider {
+  final String name;
+  final String latestUrl;
+  final String searchUrl;
+
+  AnimeProvider(
+      {required this.name, required this.latestUrl, required this.searchUrl});
+
+  String searchUrlKeyword(String keyword) =>
+      searchUrl.replaceAll('%q', keyword);
 }

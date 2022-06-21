@@ -2,58 +2,57 @@ import 'package:anime_finder/service/anime.dart';
 import 'package:anime_finder/service/settings.dart';
 import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/theme/style.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
-class AnimeCard extends StatelessWidget {
+// TODO: move orientation builder to anime_list.dart
+class AnimeCard extends GestureDetector {
   final Anime anime;
-  final void Function() onTap;
-  const AnimeCard({super.key, required this.anime, required this.onTap});
+  AnimeCard({
+    super.key,
+    required super.onTap,
+    required this.anime,
+  }) : super(
+            child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                decoration: BoxDecoration(
+                    color: kBackgroundColor,
+                    borderRadius: const BorderRadius.all(
+                        Radius.circular(kAnimeCardBorderRadius)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: kOnBackgroundColor.withOpacity(0.2),
+                        spreadRadius: 1,
+                        blurRadius: 1,
+                      ),
+                    ]),
+                alignment: Alignment.center,
+                child: OrientationBuilder(builder: (context, orientation) {
+                  orientation = MediaQuery.of(context).orientation;
+                  if (Settings.layoutOrientation.value != "auto") {
+                    orientation = Orientation.values.firstWhere((ori) =>
+                        Settings.layoutOrientation.value == ori.toString());
+                  }
+                  return orientation == Orientation.portrait
+                      ? verticalLayout(anime)
+                      : horizontalLayout(anime, context);
+                })));
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8),
-        decoration: BoxDecoration(
-            color: kBackgroundColor,
-            borderRadius:
-                const BorderRadius.all(Radius.circular(kAnimeCardBorderRadius)),
-            boxShadow: [
-              BoxShadow(
-                color: kOnBackgroundColor.withOpacity(0.2),
-                spreadRadius: 1,
-                blurRadius: 1,
-              ),
-            ]),
-        alignment: Alignment.center,
-        child: (Settings.layoutOrientation.value == "auto"
-                    ? MediaQuery.of(context).orientation
-                    : Orientation.values.where((ori) =>
-                        Settings.layoutOrientation.value == ori.toString())) ==
-                Orientation.portrait
-            ? _verticalLayout()
-            : _horizontalLayout(context),
-      ),
-    );
-  }
-
-  Widget _horizontalLayout(context) {
+  static Widget horizontalLayout(Anime anime, context) {
     return SizedBox(
       height: 200,
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Row(
+          mainAxisSize: MainAxisSize.max,
           children: [
             ConstrainedBox(
-                constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width * 0.3),
+                constraints: BoxConstraints.tightFor(
+                    width: MediaQuery.of(context).size.width * 0.3),
                 child: anime.image()),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: _textPart(),
+                child: textPart(anime),
               ),
             ),
           ],
@@ -62,7 +61,7 @@ class AnimeCard extends StatelessWidget {
     );
   }
 
-  Widget _verticalLayout() {
+  static Widget verticalLayout(Anime anime) {
     return ListTile(
       horizontalTitleGap: 0,
       minLeadingWidth: 0,
@@ -76,34 +75,30 @@ class AnimeCard extends StatelessWidget {
           child: anime.image()),
       subtitle: Padding(
         padding: const EdgeInsets.all(16),
-        child: _textPart(),
+        child: textPart(anime),
       ),
     );
   }
 
-  Widget _textPart() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        AutoSizeText(
-          anime.title ?? "(NULL)",
-          style: kTitleSmall,
-          maxLines: 4,
-          overflow: TextOverflow.ellipsis,
-          textAlign: TextAlign.center,
-        ),
-        Visibility(
-          visible: anime.provider != null,
-          child: AutoSizeText(
-            '$trProvider: ${anime.provider ?? ''}',
-            style: kBodySmall,
-            minFontSize: 9,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        )
-      ],
-    );
-  }
+  static Widget textPart(Anime anime) => Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              anime.title ?? "(NULL)",
+              style: kTitleSmall,
+              maxLines: 4,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+            ),
+            Visibility(
+              visible: anime.provider != null,
+              child: Text(
+                '$trProvider: ${anime.provider ?? ''}',
+                style: kBodySmall,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            )
+          ]);
 }

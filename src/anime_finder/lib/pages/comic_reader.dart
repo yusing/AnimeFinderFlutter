@@ -3,10 +3,8 @@ import 'dart:io';
 import 'package:anime_finder/service/watch_history.dart';
 import 'package:anime_finder/theme/style.dart';
 import 'package:anime_finder/utils/file_types.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
 import 'package:path/path.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -46,7 +44,7 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
         id: id,
         title: widget.title,
         path: widget.folderPath,
-        type: WatchHistoryEntityType.image,
+        type: WatchHistoryEntryType.image,
         duration: _files.length,
         position: _initIndex));
     super.initState();
@@ -76,20 +74,12 @@ class _ComicReaderPageState extends State<ComicReaderPage> {
                     WatchHistory.updateIndex(widget.title.hashCode, index);
                   }
                 },
-                child: Stack(children: [
-                  Image.file(File(file.path), errorBuilder: (_, err, st) {
-                    Logger().e('Image loading error', err, st);
-                    return const Center(
-                      child: Icon(Icons.error_outline),
-                    );
-                  }),
-                  Visibility(
-                    visible: kDebugMode,
-                    child: Container(
-                        color: kBackgroundColor.withOpacity(0.4),
-                        child: Text(basename(file.path), style: kBodyMedium)),
-                  )
-                ]));
+                child: Image.file(
+                  File(file.path),
+                  errorBuilder: (_, __, ___) => const Center(
+                    child: Icon(Icons.error_outline),
+                  ),
+                ));
           }),
     );
   }

@@ -3,11 +3,14 @@ import 'dart:math';
 import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/service/watch_history.dart';
 import 'package:anime_finder/theme/style.dart';
+import 'package:anime_finder/utils/duration.dart';
 import 'package:anime_finder/utils/string.dart';
 import 'package:anime_finder/widgets/af_dropdown.dart';
+import 'package:anime_finder/widgets/play_pause_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class VideoPlayerPage extends StatefulWidget {
@@ -23,13 +26,141 @@ class VideoPlayerPage extends StatefulWidget {
 
 class _VideoPlayerPageState extends State<VideoPlayerPage> {
   late VlcPlayerController _vlcController;
-  final _showControlsNotifier = ValueNotifier<bool>(true);
+  // final _showControlsNotifier = ValueNotifier<bool>(true);
   int? _activeAudioTrack;
   int? _activeSubtitleTrack;
   double _playbackSpeed = 1.0;
+  late OverlayEntry _overlay;
 
   @override
   void initState() {
+    _overlay = OverlayEntry(
+      opaque: false,
+      builder: (context) => GestureDetector(
+        onTap: () {
+          debugPrint('Tapped from overlay');
+          _overlay.remove();
+        },
+        child: Card(
+          color: Colors.black.withOpacity(0.3),
+          shadowColor: Colors.transparent,
+          elevation: 0,
+          margin: const EdgeInsets.all(0),
+          child: SizedBox.fromSize(
+              size: MediaQuery.of(context).size,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      height:
+                          min(MediaQuery.of(context).size.height * 0.15, 150),
+                      width: MediaQuery.of(context).size.width,
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          IconButton(
+                              onPressed: () => Get.back(closeOverlays: true),
+                              icon: const Icon(Icons.arrow_back_ios_new)),
+                          Expanded(
+                              child: Text(widget.title, style: kTitleSmall)),
+                          IconButton(
+                            icon: const Icon(Icons.more_vert_outlined),
+                            onPressed: () => _showOptions(),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      height:
+                          min(MediaQuery.of(context).size.height * 0.15, 150),
+                      width: MediaQuery.of(context).size.width,
+                      padding: const EdgeInsets.symmetric(horizontal: 32),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          ValueListenableBuilder(
+                            valueListenable: _vlcController,
+                            builder: (_, __, ___) => Text(
+                                '${_vlcController.value.position.toStringNoMs()} / '
+                                '${_vlcController.value.duration.toStringNoMs()}'),
+                          ),
+                          Expanded(
+                              child: ValueListenableBuilder(
+                            valueListenable: _vlcController,
+                            builder: (_, __, ___) => Slider(
+                              value: _vlcController.value.position.inSeconds
+                                  .toDouble(),
+                              onChanged: (v) => _vlcController
+                                  .seekTo(Duration(seconds: v.toInt())),
+                              // onChangeStart: (v) async =>
+                              //     await _vlcController.pause(),
+                              onChangeEnd: (v) => _vlcController.play(),
+                              min: 0.0,
+                              max: max(
+                                  1.0, // maybe uninitialized
+                                  _vlcController.value.duration.inSeconds
+                                      .toDouble()), // _durationSecs.value may load after _positionSecs.value
+                              activeColor: Colors.white,
+                              inactiveColor: Colors.white.withOpacity(0.5),
+                            ),
+                          ))
+                        ],
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                          child: Center(
+                        child: IconButton(
+                          icon: const FaIcon(FontAwesomeIcons.backward),
+                          iconSize: 32,
+                          onPressed: () async {
+                            await _vlcController.seekTo(
+                                await _vlcController.getPosition() -
+                                    const Duration(seconds: 5));
+                          },
+                        ),
+                      )),
+                      Expanded(
+                        child: Center(
+                          child: ValueListenableBuilder(
+                            valueListenable: _vlcController,
+                            builder: (_, __, ___) => PlayPauseButton(
+                                iconSize: 32,
+                                color: Colors.white.withOpacity(0.8),
+                                play: _vlcController.play,
+                                pause: _vlcController.pause,
+                                isPlaying: _vlcController.value.isPlaying),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                          child: Center(
+                        child: IconButton(
+                          icon: const FaIcon(FontAwesomeIcons.forward),
+                          iconSize: 32,
+                          onPressed: () async {
+                            await _vlcController.seekTo(
+                                await _vlcController.getPosition() +
+                                    const Duration(seconds: 5));
+                          },
+                        ),
+                      )),
+                    ],
+                  ),
+                ],
+              )),
+        ),
+      ),
+    );
     _vlcController = VlcPlayerController.network(widget.filePath.encodeUrl(),
         autoPlay: false,
         options: VlcPlayerOptions(
@@ -38,13 +169,17 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
           VlcVideoOptions.skipFrames(true)
         ])));
     _vlcController.addOnInitListener(_onVlcInit);
+    _vlcController.addOnInitListener(() {
+      Overlay.of(context)?.insert(_overlay);
+    });
     super.initState();
   }
 
   @override
   void dispose() async {
     super.dispose();
-    _showControlsNotifier.dispose();
+    _overlay.remove();
+    // _showControlsNotifier.dispose();
     if (_vlcController.value.isInitialized) {
       await _vlcController.stopRendererScanning();
       await _vlcController.dispose();
@@ -62,124 +197,21 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      body: InkWell(
-        onTap: () => _showControlsNotifier.value = !_showControlsNotifier.value,
-        splashFactory: NoSplash.splashFactory,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Center(
-              child: VlcPlayer(
+      body: GestureDetector(
+        onTap: () {
+          debugPrint('Tapped from player');
+          if (!_overlay.mounted) {
+            Overlay.of(context)?.insert(_overlay);
+          } else {
+            _overlay.remove();
+          }
+          // _showControlsNotifier.value = true;
+        },
+        child: Center(
+            child: VlcPlayer(
                 controller: _vlcController,
                 aspectRatio: 16 / 9,
-                placeholder: const Center(child: CircularProgressIndicator()),
-              ),
-            ),
-            ValueListenableBuilder(
-              valueListenable: _showControlsNotifier,
-              builder: (_, __, ___) => Visibility(
-                  visible: _showControlsNotifier.value,
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                      color: Colors.black.withOpacity(0.5),
-                      height:
-                          min(MediaQuery.of(context).size.height * 0.15, 150),
-                      padding: const EdgeInsets.all(8),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          IconButton(
-                              onPressed: () => Get.back(closeOverlays: true),
-                              icon: const Icon(Icons.arrow_back_ios_new)),
-                          Expanded(
-                              child: Text(widget.title, style: kTitleSmall)),
-                          IconButton(
-                            icon: const Icon(Icons.more_vert_outlined),
-                            onPressed: () => _showOptions(),
-                          )
-                        ],
-                      ),
-                    ),
-                  )),
-            ),
-            ValueListenableBuilder(
-              valueListenable: _showControlsNotifier,
-              builder: (_, __, ___) => Visibility(
-                visible: _showControlsNotifier.value,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    color: Colors.black.withOpacity(0.5),
-                    height: min(MediaQuery.of(context).size.height * 0.15, 150),
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.forward_5_outlined),
-                          onPressed: () async {
-                            await _vlcController.seekTo(
-                                await _vlcController.getPosition() -
-                                    const Duration(seconds: 5));
-                          },
-                        ),
-                        ValueListenableBuilder(
-                          valueListenable: _vlcController,
-                          builder: (_, __, ___) =>
-                              !_vlcController.value.isInitialized
-                                  ? const Icon(Icons.play_arrow_outlined)
-                                  : IconButton(
-                                      onPressed: () =>
-                                          _vlcController.value.isPlaying
-                                              ? _vlcController.pause()
-                                              : _vlcController.play(),
-                                      icon: Icon(_vlcController.value.isPlaying
-                                          ? Icons.pause
-                                          : Icons.play_arrow)),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.forward_5_outlined),
-                          onPressed: () async {
-                            await _vlcController.seekTo(
-                                await _vlcController.getPosition() +
-                                    const Duration(seconds: 5));
-                          },
-                        ),
-                        ValueListenableBuilder(
-                          valueListenable: _vlcController,
-                          builder: (_, __, ___) => Text(
-                              '${_vlcController.value.position.toStringNoMs()} / '
-                              '${_vlcController.value.duration.toStringNoMs()}'),
-                        ),
-                        Expanded(
-                            child: ValueListenableBuilder(
-                          valueListenable: _vlcController,
-                          builder: (_, __, ___) => Slider(
-                            value: _vlcController.value.position.inSeconds
-                                .toDouble(),
-                            onChanged: (v) => _vlcController
-                                .seekTo(Duration(seconds: v.toInt())),
-                            // onChangeStart: (v) async =>
-                            //     await _vlcController.pause(),
-                            onChangeEnd: (v) => _vlcController.play(),
-                            min: 0.0,
-                            max: max(
-                                1.0, // maybe uninitialized
-                                _vlcController.value.duration.inSeconds
-                                    .toDouble()), // _durationSecs.value may load after _positionSecs.value
-                            activeColor: Colors.white,
-                            inactiveColor: Colors.white.withOpacity(0.5),
-                          ),
-                        ))
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
+                placeholder: const Center(child: CircularProgressIndicator()))),
       ),
     );
   }
@@ -203,7 +235,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
         id: videoId,
         title: widget.title,
         path: widget.filePath,
-        type: WatchHistoryEntityType.video,
+        type: WatchHistoryEntryType.video,
         duration: _vlcController.value.duration.inSeconds));
 
     if (lastWatched != Duration.zero) {
@@ -220,6 +252,9 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
   }
 
   void _showOptions() {
+    if (_overlay.mounted) {
+      _overlay.remove();
+    }
     showModalBottomSheet(
         context: context,
         backgroundColor: kBackgroundColor,
@@ -277,30 +312,5 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
             ],
           );
         });
-  }
-}
-
-extension DurationExt on Duration {
-  String toStringNoMs() {
-    var microseconds = inMicroseconds;
-
-    var hours = microseconds ~/ Duration.microsecondsPerHour;
-    microseconds = microseconds.remainder(Duration.microsecondsPerHour);
-
-    if (microseconds < 0) microseconds = -microseconds;
-
-    var minutes = microseconds ~/ Duration.microsecondsPerMinute;
-    microseconds = microseconds.remainder(Duration.microsecondsPerMinute);
-
-    var minutesPadding = minutes < 10 ? "0" : "";
-
-    var seconds = microseconds ~/ Duration.microsecondsPerSecond;
-    microseconds = microseconds.remainder(Duration.microsecondsPerSecond);
-
-    var secondsPadding = seconds < 10 ? "0" : "";
-
-    return "$hours:"
-        "$minutesPadding$minutes:"
-        "$secondsPadding$seconds";
   }
 }

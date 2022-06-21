@@ -1,4 +1,4 @@
-import 'anime_provider.dart';
+import 'anime.dart';
 import 'translation.dart';
 
 Map<String, AnimeProvider> get animeProviders => {

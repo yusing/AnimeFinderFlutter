@@ -1,13 +1,12 @@
 import 'package:anime_finder/service/settings.dart';
 import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/theme/style.dart';
-import 'package:anime_finder/utils/callback.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SettingItem<T> extends StatelessWidget {
   final Setting<T> setting;
-  final SetStateCallback setState;
+  final StateSetter setState;
 
   final _stringSettingController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -26,7 +25,7 @@ class SettingItem<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-        title: Text(setting.titleDelegate(), style: kTitleMedium),
+        title: Text(setting.titleDelegate(), style: kTitleSmall),
         trailing: _isSwitch
             ? Switch(
                 value: setting.value as bool,
@@ -37,7 +36,7 @@ class SettingItem<T> extends StatelessWidget {
                 ? DropdownButton<T>(
                     alignment: Alignment.center,
                     dropdownColor: kBackgroundColor,
-                    style: kTitleMedium,
+                    style: kTitleSmall,
                     value: setting.value,
                     onChanged: (value) =>
                         setState(() => setting.value = value as T),
@@ -51,14 +50,14 @@ class SettingItem<T> extends StatelessWidget {
                       ])
                 : !_isString
                     ? null
-                    : Text(setting.value as String, style: kTitleMedium),
+                    : Text(setting.value as String, style: kTitleSmall),
         onTap: !_isPopup
             ? null
             : () {
                 Get.defaultDialog(
                   contentPadding: const EdgeInsets.all(24),
                   radius: 12,
-                  titleStyle: kTitleMedium,
+                  titleStyle: kTitleSmall,
                   title: setting.titleDelegate(),
                   backgroundColor: kBackgroundColor,
                   content: Form(

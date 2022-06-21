@@ -22,7 +22,7 @@ class AnimeList extends StatelessWidget {
             snapshot.hasData) {
           if (snapshot.data!.isEmpty) {
             return Center(
-              child: Text(trPageNothingYet),
+              child: Text(trPageNthYet),
             );
           }
           return ListView.separated(
@@ -64,14 +64,16 @@ class AnimeList extends StatelessWidget {
           size.height * 0.6,
         )),
         child: SingleChildScrollView(
-          child: Html(
-            data: anime.misc,
-            shrinkWrap: true,
-            onLinkTap: (url, _, __, ___) async {
-              if (url != null && await canLaunchUrlString(url)) {
-                await launchUrlString(url);
-              }
-            },
+          child: Center(
+            child: Html(
+              data: anime.misc,
+              shrinkWrap: true,
+              onLinkTap: (url, _, __, ___) async {
+                if (url != null && await canLaunchUrlString(url)) {
+                  await launchUrlString(url);
+                }
+              },
+            ),
           ),
         ),
       ),
@@ -82,7 +84,7 @@ class AnimeList extends StatelessWidget {
             await showToast(message: trNoMagnetUrl, title: trDownloadError);
             return;
           }
-          Get.back(); // close dialog
+          Get.back(closeOverlays: true); // close dialog
           showToast(message: trDownloadAdded, title: anime.title ?? "");
           await addTorrent(anime.title ?? anime.magnetUrl!, anime.magnetUrl!);
         },

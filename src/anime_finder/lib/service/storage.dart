@@ -25,4 +25,4 @@ Future<void> removePref(String key) async {
   await _prefs.remove(key);
 }
 
-late final GetStorage _prefs;
+late GetStorage _prefs;

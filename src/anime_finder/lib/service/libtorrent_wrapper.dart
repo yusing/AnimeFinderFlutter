@@ -39,6 +39,24 @@ class LibTorrent {
   late final _pop_print_queue =
       _pop_print_queuePtr.asFunction<void Function()>();
 
+  int cache_used() {
+    return _cache_used();
+  }
+
+  late final _cache_usedPtr =
+      _lookup<ffi.NativeFunction<ptrdiff_t Function()>>('lt_cache_used');
+  late final _cache_used = _cache_usedPtr.asFunction<int Function()>();
+
+  double cache_used_percentage() {
+    return _cache_used_percentage();
+  }
+
+  late final _cache_used_percentagePtr =
+      _lookup<ffi.NativeFunction<ffi.Double Function()>>(
+          'lt_cache_used_percentage');
+  late final _cache_used_percentage =
+      _cache_used_percentagePtr.asFunction<double Function()>();
+
   void add_torrent(
     ffi.Pointer<ffi.Char> magnet_url,
     ffi.Pointer<ffi.Char> save_path,
@@ -72,293 +90,116 @@ class LibTorrent {
   late final _init_session =
       _init_sessionPtr.asFunction<void Function(ffi.Pointer<ffi.Char>)>();
 
-  ffi.Pointer<ffi.Void> get_torrent_vec() {
-    return _get_torrent_vec();
+  int n_torrents() {
+    return _n_torrents();
   }
 
-  late final _get_torrent_vecPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function()>>(
-          'lt_get_torrent_vec');
-  late final _get_torrent_vec =
-      _get_torrent_vecPtr.asFunction<ffi.Pointer<ffi.Void> Function()>();
+  late final _n_torrentsPtr =
+      _lookup<ffi.NativeFunction<ffi.Size Function()>>('lt_n_torrents');
+  late final _n_torrents = _n_torrentsPtr.asFunction<int Function()>();
 
-  int torrent_vec_size(
-    ffi.Pointer<ffi.Void> p_torrent_vec,
+  bool need_update() {
+    return _need_update();
+  }
+
+  late final _need_updatePtr =
+      _lookup<ffi.NativeFunction<ffi.Bool Function()>>('lt_need_update');
+  late final _need_update = _need_updatePtr.asFunction<bool Function()>();
+
+  void updated() {
+    return _updated();
+  }
+
+  late final _updatedPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function()>>('lt_updated');
+  late final _updated = _updatedPtr.asFunction<void Function()>();
+
+  ffi.Pointer<torrent_result> query_torrent(
+    int torrent_index,
   ) {
-    return _torrent_vec_size(
-      p_torrent_vec,
+    return _query_torrent(
+      torrent_index,
     );
   }
 
-  late final _torrent_vec_sizePtr =
-      _lookup<ffi.NativeFunction<ffi.Size Function(ffi.Pointer<ffi.Void>)>>(
-          'lt_torrent_vec_size');
-  late final _torrent_vec_size =
-      _torrent_vec_sizePtr.asFunction<int Function(ffi.Pointer<ffi.Void>)>();
-
-  ffi.Pointer<ffi.Void> torrent_handle_at(
-    ffi.Pointer<ffi.Void> p_torrent_vec,
-    int index,
-  ) {
-    return _torrent_handle_at(
-      p_torrent_vec,
-      index,
-    );
-  }
-
-  late final _torrent_handle_atPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Void> Function(
-              ffi.Pointer<ffi.Void>, ffi.Size)>>('lt_torrent_handle_at');
-  late final _torrent_handle_at = _torrent_handle_atPtr
-      .asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>, int)>();
-
-  ffi.Pointer<ffi.Char> torrent_name(
-    ffi.Pointer<ffi.Void> p_torrent_handle,
-  ) {
-    return _torrent_name(
-      p_torrent_handle,
-    );
-  }
-
-  late final _torrent_namePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<ffi.Void>)>>('lt_torrent_name');
-  late final _torrent_name = _torrent_namePtr
-      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Void>)>();
-
-  ffi.Pointer<ffi.Char> torrent_save_path(
-    ffi.Pointer<ffi.Void> p_torrent_handle,
-  ) {
-    return _torrent_save_path(
-      p_torrent_handle,
-    );
-  }
-
-  late final _torrent_save_pathPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<ffi.Void>)>>('lt_torrent_save_path');
-  late final _torrent_save_path = _torrent_save_pathPtr
-      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Void>)>();
-
-  ffi.Pointer<ffi.Char> torrent_state(
-    ffi.Pointer<ffi.Void> p_torrent_handle,
-  ) {
-    return _torrent_state(
-      p_torrent_handle,
-    );
-  }
-
-  late final _torrent_statePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<ffi.Void>)>>('lt_torrent_state');
-  late final _torrent_state = _torrent_statePtr
-      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Void>)>();
-
-  double torrent_progress(
-    ffi.Pointer<ffi.Void> p_torrent_handle,
-  ) {
-    return _torrent_progress(
-      p_torrent_handle,
-    );
-  }
-
-  late final _torrent_progressPtr =
-      _lookup<ffi.NativeFunction<ffi.Double Function(ffi.Pointer<ffi.Void>)>>(
-          'lt_torrent_progress');
-  late final _torrent_progress =
-      _torrent_progressPtr.asFunction<double Function(ffi.Pointer<ffi.Void>)>();
-
-  int torrent_file_size(
-    ffi.Pointer<ffi.Void> p_torrent_handle,
-  ) {
-    return _torrent_file_size(
-      p_torrent_handle,
-    );
-  }
-
-  late final _torrent_file_sizePtr =
-      _lookup<ffi.NativeFunction<ffi.Int64 Function(ffi.Pointer<ffi.Void>)>>(
-          'lt_torrent_file_size');
-  late final _torrent_file_size =
-      _torrent_file_sizePtr.asFunction<int Function(ffi.Pointer<ffi.Void>)>();
-
-  int torrent_download_rate(
-    ffi.Pointer<ffi.Void> p_torrent_handle,
-  ) {
-    return _torrent_download_rate(
-      p_torrent_handle,
-    );
-  }
-
-  late final _torrent_download_ratePtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Void>)>>(
-          'lt_torrent_download_rate');
-  late final _torrent_download_rate = _torrent_download_ratePtr
-      .asFunction<int Function(ffi.Pointer<ffi.Void>)>();
-
-  bool torrent_paused(
-    ffi.Pointer<ffi.Void> p_torrent_handle,
-  ) {
-    return _torrent_paused(
-      p_torrent_handle,
-    );
-  }
-
-  late final _torrent_pausedPtr =
-      _lookup<ffi.NativeFunction<ffi.Bool Function(ffi.Pointer<ffi.Void>)>>(
-          'lt_torrent_paused');
-  late final _torrent_paused =
-      _torrent_pausedPtr.asFunction<bool Function(ffi.Pointer<ffi.Void>)>();
-
-  bool torrent_finished(
-    ffi.Pointer<ffi.Void> p_torrent_handle,
-  ) {
-    return _torrent_finished(
-      p_torrent_handle,
-    );
-  }
-
-  late final _torrent_finishedPtr =
-      _lookup<ffi.NativeFunction<ffi.Bool Function(ffi.Pointer<ffi.Void>)>>(
-          'lt_torrent_finished');
-  late final _torrent_finished =
-      _torrent_finishedPtr.asFunction<bool Function(ffi.Pointer<ffi.Void>)>();
+  late final _query_torrentPtr = _lookup<
+          ffi.NativeFunction<ffi.Pointer<torrent_result> Function(ffi.Size)>>(
+      'lt_query_torrent');
+  late final _query_torrent =
+      _query_torrentPtr.asFunction<ffi.Pointer<torrent_result> Function(int)>();
 
   void pause_torrent(
-    ffi.Pointer<ffi.Void> p_torrent_handle,
+    int torrent_index,
   ) {
     return _pause_torrent(
-      p_torrent_handle,
+      torrent_index,
     );
   }
 
   late final _pause_torrentPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Size)>>(
           'lt_pause_torrent');
   late final _pause_torrent =
-      _pause_torrentPtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+      _pause_torrentPtr.asFunction<void Function(int)>();
 
   void resume_torrent(
-    ffi.Pointer<ffi.Void> p_torrent_handle,
+    int torrent_index,
   ) {
     return _resume_torrent(
-      p_torrent_handle,
+      torrent_index,
     );
   }
 
   late final _resume_torrentPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Size)>>(
           'lt_resume_torrent');
   late final _resume_torrent =
-      _resume_torrentPtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+      _resume_torrentPtr.asFunction<void Function(int)>();
 
   void remove_torrent(
-    ffi.Pointer<ffi.Void> p_torrent_handle,
+    int torrent_index,
   ) {
     return _remove_torrent(
-      p_torrent_handle,
+      torrent_index,
     );
   }
 
   late final _remove_torrentPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Size)>>(
           'lt_remove_torrent');
   late final _remove_torrent =
-      _remove_torrentPtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+      _remove_torrentPtr.asFunction<void Function(int)>();
 
-  ffi.Pointer<ffi.Void> torrent_files(
-    ffi.Pointer<ffi.Void> p_torrent_handle,
+  ffi.Pointer<files_result> query_files(
+    int torrent_index,
   ) {
-    return _torrent_files(
-      p_torrent_handle,
+    return _query_files(
+      torrent_index,
     );
   }
 
-  late final _torrent_filesPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Void> Function(
-              ffi.Pointer<ffi.Void>)>>('lt_torrent_files');
-  late final _torrent_files = _torrent_filesPtr
-      .asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+  late final _query_filesPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<files_result> Function(ffi.Size)>>(
+          'lt_query_files');
+  late final _query_files =
+      _query_filesPtr.asFunction<ffi.Pointer<files_result> Function(int)>();
 
-  int torrent_num_files(
-    ffi.Pointer<ffi.Void> p_torrent_files,
-  ) {
-    return _torrent_num_files(
-      p_torrent_files,
-    );
-  }
-
-  late final _torrent_num_filesPtr =
-      _lookup<ffi.NativeFunction<ffi.Size Function(ffi.Pointer<ffi.Void>)>>(
-          'lt_torrent_num_files');
-  late final _torrent_num_files =
-      _torrent_num_filesPtr.asFunction<int Function(ffi.Pointer<ffi.Void>)>();
-
-  ffi.Pointer<ffi.Void> file_info_at(
-    ffi.Pointer<ffi.Void> p_torrent_files,
+  ffi.Pointer<file_result> query_file(
+    ffi.Pointer<files_result> query,
     int index,
   ) {
-    return _file_info_at(
-      p_torrent_files,
+    return _query_file(
+      query,
       index,
     );
   }
 
-  late final _file_info_atPtr = _lookup<
+  late final _query_filePtr = _lookup<
       ffi.NativeFunction<
-          ffi.Pointer<ffi.Void> Function(
-              ffi.Pointer<ffi.Void>, ffi.Int64)>>('lt_file_info_at');
-  late final _file_info_at = _file_info_atPtr
-      .asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>, int)>();
-
-  ffi.Pointer<ffi.Char> file_name(
-    ffi.Pointer<ffi.Void> p_torrent_file_info,
-  ) {
-    return _file_name(
-      p_torrent_file_info,
-    );
-  }
-
-  late final _file_namePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<ffi.Void>)>>('lt_file_name');
-  late final _file_name = _file_namePtr
-      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Void>)>();
-
-  ffi.Pointer<ffi.Char> file_path(
-    ffi.Pointer<ffi.Void> p_torrent_file_info,
-  ) {
-    return _file_path(
-      p_torrent_file_info,
-    );
-  }
-
-  late final _file_pathPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<ffi.Void>)>>('lt_file_path');
-  late final _file_path = _file_pathPtr
-      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Void>)>();
-
-  int file_size(
-    ffi.Pointer<ffi.Void> p_torrent_file_info,
-  ) {
-    return _file_size(
-      p_torrent_file_info,
-    );
-  }
-
-  late final _file_sizePtr =
-      _lookup<ffi.NativeFunction<ffi.Int64 Function(ffi.Pointer<ffi.Void>)>>(
-          'lt_file_size');
-  late final _file_size =
-      _file_sizePtr.asFunction<int Function(ffi.Pointer<ffi.Void>)>();
+          ffi.Pointer<file_result> Function(
+              ffi.Pointer<files_result>, ffi.Int32)>>('lt_query_file');
+  late final _query_file = _query_filePtr.asFunction<
+      ffi.Pointer<file_result> Function(ffi.Pointer<files_result>, int)>();
 }
 
 class __mbstate_t extends ffi.Union {
@@ -451,6 +292,48 @@ class _opaque_pthread_t extends ffi.Struct {
 
   @ffi.Array.multi([8176])
   external ffi.Array<ffi.Char> __opaque;
+}
+
+typedef ptrdiff_t = __darwin_ptrdiff_t;
+typedef __darwin_ptrdiff_t = ffi.Long;
+
+class torrent_result extends ffi.Struct {
+  external ffi.Pointer<ffi.Char> name;
+
+  external ffi.Pointer<ffi.Char> save_path;
+
+  external ffi.Pointer<ffi.Char> state;
+
+  @ffi.Float()
+  external double progress;
+
+  @ffi.Int64()
+  external int total_size;
+
+  @ffi.Int()
+  external int download_rate;
+
+  @ffi.Bool()
+  external bool paused;
+
+  @ffi.Bool()
+  external bool finished;
+}
+
+class files_result extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> p_torrent_info;
+
+  @ffi.Int()
+  external int n_files;
+}
+
+class file_result extends ffi.Struct {
+  external ffi.Pointer<ffi.Char> name;
+
+  external ffi.Pointer<ffi.Char> path;
+
+  @ffi.Int64()
+  external int size;
 }
 
 const int __WORDSIZE = 64;

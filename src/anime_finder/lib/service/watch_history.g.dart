@@ -11,14 +11,14 @@ WatchHistoryEntry _$WatchHistoryEntryFromJson(Map<String, dynamic> json) =>
       id: json['id'] as int,
       title: json['title'] as String,
       path: json['path'] as String,
-      type: $enumDecode(_$WatchHistoryEntityTypeEnumMap, json['type']),
+      type: $enumDecode(_$WatchHistoryEntryTypeEnumMap, json['type']),
       duration: json['duration'] as int?,
       position: json['position'] as int?,
     );
 
 Map<String, dynamic> _$WatchHistoryEntryToJson(WatchHistoryEntry instance) =>
     <String, dynamic>{
-      'type': _$WatchHistoryEntityTypeEnumMap[instance.type],
+      'type': _$WatchHistoryEntryTypeEnumMap[instance.type],
       'id': instance.id,
       'title': instance.title,
       'path': instance.path,
@@ -26,9 +26,10 @@ Map<String, dynamic> _$WatchHistoryEntryToJson(WatchHistoryEntry instance) =>
       'position': instance.position,
     };
 
-const _$WatchHistoryEntityTypeEnumMap = {
-  WatchHistoryEntityType.video: 'video',
-  WatchHistoryEntityType.image: 'image',
+const _$WatchHistoryEntryTypeEnumMap = {
+  WatchHistoryEntryType.video: 'video',
+  WatchHistoryEntryType.image: 'image',
+  WatchHistoryEntryType.audio: 'audio',
 };
 
 WatchHistories _$WatchHistoriesFromJson(Map<String, dynamic> json) =>

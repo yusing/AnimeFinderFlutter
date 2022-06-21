@@ -1,0 +1,289 @@
+{
+    "languages": ["en", "zh"],
+    "translations": {
+        "about": [
+            "About",
+            "關於"
+        ],
+        "all": [
+            "All",
+            "全部"
+        ],
+        "all_categories": [
+            "All Categories",
+            "全部分類"
+        ],
+        "anime": [
+            "Anime",
+            "動漫"
+        ],
+        "anime_songs": [
+            "Anime Songs",
+            "動漫歌曲"
+        ],
+        "audio_track": [
+            "Audio track",
+            "音訊軌道"
+        ],
+        "auto": [
+            "Auto",
+            "自動"
+        ],
+        "cancel": [
+            "Cancel",
+            "取消"
+        ],
+        "cannot_be_empty": [
+            "Cannot be empty",
+            "不能為空"
+        ],
+        "checking": [
+            "Checking integrity",
+            "驗證檔案中"
+        ],
+        "colon": [
+            ":",
+            "："
+        ],
+        "comics": [
+            "Comics",
+            "漫畫"
+        ],
+        "confirm": [
+            "Confirm",
+            "確定"
+        ],
+        "confirmation": [
+            "Confirmation",
+            "確認"
+        ],
+        "connection_error": [
+            "Connection error",
+            "連線錯誤"
+        ],
+        "dark_mode": [
+            "Dark Mode",
+            "夜間模式"
+        ],
+        "default": [
+            "Default",
+            "預設"
+        ],
+        "delete": [
+            "Delete",
+            "刪除"
+        ],
+        "download": [
+            "Download",
+            "下載"
+        ],
+        "download_added": [
+            "Added to downloads",
+            "已加入下載"
+        ],
+        "download_error": [
+            "Error downloading file",
+            "下載檔案錯誤"
+        ],
+        "downloading": [
+            "Downloading",
+            "下載中"
+        ],
+        "downloads": [
+            "Downloads",
+            "下載"
+        ],
+        "file_manager": [
+            "File Manager",
+            "檔案管理"
+        ],
+        "file_not_exists": [
+            "File not exists",
+            "檔案不存在"
+        ],
+        "filename": [
+            "File name",
+            "檔案名稱"
+        ],
+        "filename_empty_error": [
+            "Title cannot be empty",
+            "標題不能為空"
+        ],
+        "filter_by": [
+            "Filter by",
+            "篩選條件"
+        ],
+        "filter_no_chinese": [
+            "Filter All Chinese Content",
+            "篩選所有中文內容"
+        ],
+        "filter_no_chs": [
+            "Filter Simplified Chinese Content",
+            "篩選簡體中文內容"
+        ],
+        "font_large": [
+            "Large",
+            "大"
+        ],
+        "font_normal": [
+            "Normal",
+            "正常"
+        ],
+        "font_small": [
+            "Small",
+            "小"
+        ],
+        "games": [
+            "Games",
+            "遊戲"
+        ],
+        "history": [
+            "History",
+            "觀看紀錄"
+        ],
+        "home": [
+            "Home",
+            "首頁"
+        ],
+        "invalid_format": [
+            "Invalid format",
+            "無效的格式"
+        ],
+        "jp_tv_shows": [
+            "JP TV Shows",
+            "日劇"
+        ],
+        "landscape": [
+            "Landscape",
+            "橫向"
+        ],
+        "layout_orientation": [
+            "UI Orientation",
+            "界面方向"
+        ],
+        "literature": [
+            "Literature",
+            "文學"
+        ],
+        "locale": [
+            "Language",
+            "語言"
+        ],
+        "lossless_music": [
+            "Lossless Music",
+            "無損音樂"
+        ],
+        "music": [
+            "Music",
+            "音樂"
+        ],
+        "no_magnet_url": [
+            "No magnet URL found for this item",
+            "沒有為此項目找到磁力連結"
+        ],
+        "no_search_history": [
+            "No search history",
+            "沒有搜尋記錄"
+        ],
+        "num_files": [
+            "Files",
+            "個檔案"
+        ],
+        "open_file": [
+            "Open file",
+            "開啟檔案"
+        ],
+        "open_file_location": [
+            "Open file location",
+            "開啟檔案位置"
+        ],
+        "other_categories": [
+            "Other",
+            "其他"
+        ],
+        "page_nth_yet": [
+            "Nothing here...",
+            "空空如也..."
+        ],
+        "paused": [
+            "Paused",
+            "暫停"
+        ],
+        "pause_dl": [
+            "Pause download",
+            "暫停下載"
+        ],
+        "photos": [
+            "Photos",
+            "照片"
+        ],
+        "playback_speed": [
+            "Playback speed",
+            "播放速度"
+        ],
+        "playlist": [
+            "Playlist",
+            "播放清單"
+        ],
+        "portrait": [
+            "Portrait",
+            "直向"
+        ],
+        "provider": [
+            "Provider",
+            "字幕組"
+        ],
+        "reset_all_settings": [
+            "Reset all settings",
+            "重置所有設定"
+        ],
+        "reset_all_settings_confirm": [
+            "Are you sure you want to reset all settings?",
+            "確定要重置所有設定嗎?"
+        ],
+        "resume_dl": [
+            "Resume download",
+            "繼續下載"
+        ],
+        "searchbar_empty": [
+            "Please enter a search term",
+            "請輸入搜尋關鍵字"
+        ],
+        "searchbar_hint": [
+            "Search anything...",
+            "搜尋關鍵字..."
+        ],
+        "settings": [
+            "Settings",
+            "設定"
+        ],
+        "show_all_files": [
+            "List files",
+            "列出檔案"
+        ],
+        "software": [
+            "Software",
+            "軟體"
+        ],
+        "subtitle": [
+            "Subtitle",
+            "字幕"
+        ],
+        "text_scale": [
+            "Text size",
+            "文字大小"
+        ],
+        "unsupported_file_type": [
+            "Unsupported file type",
+            "不支援的檔案類型"
+        ],
+        "version": [
+            "Current Version: v0.2.0",
+            "當前版本: v0.2.0"
+        ],
+        "warning": [
+            "Warning",
+            "警告"
+        ]
+    }
+}

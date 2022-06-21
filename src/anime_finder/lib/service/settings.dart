@@ -1,5 +1,4 @@
 import 'package:anime_finder/pages/home.dart';
-import 'package:anime_finder/service/anime_provider.dart';
 import 'package:anime_finder/service/storage.dart';
 import 'package:anime_finder/service/translation.dart';
 import 'package:anime_finder/widgets/setting_item.dart';
@@ -7,17 +6,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../utils/platform.dart';
+import 'anime.dart';
 import 'anime_providers.dart';
-import 'platform.dart';
-
-typedef SettingNameDelegate = String Function();
 
 class Setting<T> {
   final String Function() titleDelegate;
   final String key;
   final T defaultValue;
   final void Function(T)? onChange; // for bool
-  final Map<SettingNameDelegate, T>? values; // for dropdown
+  final Map<ValueGetter<String>, T>? values; // for dropdown
   final RegExp? validator; // for string
   final bool Function()? visibilityDelegate;
 
@@ -52,14 +50,14 @@ class Setting<T> {
   @override
   String toString() => '${describeIdentity(this)}($value)';
 
-  Widget widget(void Function(void Function()) setState) => Visibility(
+  Widget widget(StateSetter setState) => Visibility(
       visible: visibilityDelegate?.call() ?? true,
       child: SettingItem(setting: this, setState: setState));
 }
 
 class Settings {
   static Setting<String> locale = Setting(
-    titleDelegate: () => trSettingLocale,
+    titleDelegate: () => trLocale,
     key: 'locale',
     defaultValue: Get.deviceLocale?.languageCode ?? "zh",
     values: {
@@ -70,7 +68,7 @@ class Settings {
   );
 
   static Setting<bool> darkMode = Setting(
-      titleDelegate: () => trSettingDarkMode,
+      titleDelegate: () => trDarkMode,
       key: 'dark_mode',
       defaultValue: ThemeMode.system == ThemeMode.dark,
       onChange: (value) async {
@@ -79,13 +77,13 @@ class Settings {
       });
 
   static Setting<double> textScale = Setting(
-    titleDelegate: () => trSettingTextScale,
+    titleDelegate: () => trTextScale,
     key: 'text_scale',
-    defaultValue: AFPlatform.isMobile ? 0.8 : 1.0,
+    defaultValue: AFPlatform.isMobile ? 0.9 : 1.0,
     values: {
-      () => trSettingFontSmall: 0.8,
-      () => trSettingFontNormal: 1.0,
-      () => trSettingFontLarge: 1.2,
+      () => trFontSmall: 0.9,
+      () => trFontNormal: 1.0,
+      () => trFontLarge: 1.1,
     },
     onChange: (value) async {
       await Get.forceAppUpdate();
@@ -93,28 +91,28 @@ class Settings {
   );
 
   static Setting<String> layoutOrientation = Setting(
-      titleDelegate: () => trSettingLayoutOrientation,
+      titleDelegate: () => trLayoutOrientation,
       key: 'layout_orientation',
       defaultValue: "auto",
       values: {
-        () => trSettingAuto: "auto",
-        () => trSettingPortrait: Orientation.portrait.toString(),
-        () => trSettingLandscape: Orientation.landscape.toString(),
+        () => trAuto: "auto",
+        () => trPortrait: Orientation.portrait.toString(),
+        () => trLandscape: Orientation.landscape.toString(),
       });
 
   static Setting<bool> filterNoCHS = Setting(
-      titleDelegate: () => trSettingFilterNoChs,
+      titleDelegate: () => trFilterNoChs,
       key: 'filter_no_chs',
       defaultValue: false,
       visibilityDelegate: () => filterNoChinese.value != true);
 
   static Setting<bool> filterNoChinese = Setting(
-      titleDelegate: () => trSettingFilterNoChinese,
+      titleDelegate: () => trFilterNoChinese,
       key: 'filter_no_chinese',
       defaultValue: false);
 
   static Setting<String> animeProvider = Setting(
-      titleDelegate: () => trSettingProvider,
+      titleDelegate: () => trProvider,
       key: 'anime_provider',
       defaultValue: animeProviders.entries.first.key,
       values: {
@@ -140,6 +138,4 @@ class Settings {
     () => filterNoChinese,
     () => filterNoCHS
   ];
-
-  static const currentVersion = "v0.2.0";
 }

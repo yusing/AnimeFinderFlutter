@@ -2,7 +2,6 @@ import 'package:anime_finder/pages/search_history.dart';
 import 'package:anime_finder/service/anime.dart';
 import 'package:anime_finder/theme/style.dart';
 import 'package:anime_finder/widgets/anime_list.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -22,7 +21,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
-  static var _animeListFuture = Anime.latestAnimes();
+  static var _animeListFuture = Anime.latestAnime();
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +31,13 @@ class _HomePageState extends State<HomePage>
         valueListenable: HomePage.reloadNeeded,
         builder: (context, value, widget) {
           if (HomePage.reloadNeeded.value) {
-            _animeListFuture = Anime.latestAnimes();
+            _animeListFuture = Anime.latestAnime();
             HomePage.reloadNeeded.value = false;
             debugPrint('HomePage rebuilt');
           }
           return RefreshIndicator(
               onRefresh: () async {
-                _animeListFuture = Anime.latestAnimes();
+                _animeListFuture = Anime.latestAnime();
                 HomePage.reloadNeeded.value = true;
               },
               child: AnimeList(animeListFuture: _animeListFuture));

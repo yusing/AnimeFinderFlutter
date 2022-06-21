@@ -1,0 +1,25 @@
+ninja: Entering directory `/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/android/app/.cxx/Debug/4p5g10z1/arm64-v8a'
+[1/4] Building CXX object CMakeFiles/dart_torrent.dir/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/misc.cpp.o
+In file included from /Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/misc.cpp:2:
+/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/misc.hpp:18:8: warning: constexpr if is a C++17 extension [-Wc++17-extensions]
+    if constexpr (!TORRENT_DEBUG) {
+       ^
+1 warning generated.
+[2/4] Building CXX object CMakeFiles/dart_torrent.dir/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/sql.cpp.o
+In file included from /Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/sql.cpp:11:
+/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/misc.hpp:18:8: warning: constexpr if is a C++17 extension [-Wc++17-extensions]
+    if constexpr (!TORRENT_DEBUG) {
+       ^
+In file included from /Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/sql.cpp:14:
+/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/memory.hpp:12:47: warning: static_assert with no message is a C++17 extension [-Wc++17-extensions]
+    static_assert(std::is_same<T, char>::value);
+                                              ^
+                                              , ""
+2 warnings generated.
+[3/4] Building CXX object CMakeFiles/dart_torrent.dir/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/dart_torrent.cpp.o
+In file included from /Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/dart_torrent.cpp:20:
+/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/misc.hpp:18:8: warning: constexpr if is a C++17 extension [-Wc++17-extensions]
+    if constexpr (!TORRENT_DEBUG) {
+       ^
+1 warning generated.
+[4/4] Linking CXX shared library /Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/build/app/intermediates/cxx/Debug/4p5g10z1/obj/arm64-v8a/libdart_torrent.so

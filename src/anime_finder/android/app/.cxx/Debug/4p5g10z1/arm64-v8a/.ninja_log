@@ -1,0 +1,19 @@
+# ninja log v5
+4	1791	1655749388	CMakeFiles/dart_torrent.dir/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/sqlite3/shell.c.o	7f7a84959a29d812
+1	5107	1655749391	CMakeFiles/dart_torrent.dir/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/misc.cpp.o	9f1931dda89492f0
+8	5549	1655749392	CMakeFiles/dart_torrent.dir/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/sqlite3/sqlite3.c.o	3660dab35832189e
+0	6019	1655749392	CMakeFiles/dart_torrent.dir/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/dart_torrent.cpp.o	8efb985508c61def
+7	974	1655749447	CMakeFiles/dart_torrent.dir/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/memory.cpp.o	f18af83268abf9e9
+9	1761	1655749448	CMakeFiles/dart_torrent.dir/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/str.cpp.o	c697c4050e7135b9
+8	3314	1655749450	CMakeFiles/dart_torrent.dir/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/sql.cpp.o	36a8ed5f1610cf78
+3314	3626	1655749450	/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/build/app/intermediates/cxx/Debug/4p5g10z1/obj/arm64-v8a/libdart_torrent.so	83154265c672e25
+30	1246	1655750850	CMakeFiles/dart_torrent.dir/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/memory.cpp.o	f18af83268abf9e9
+31	2135	1655750851	CMakeFiles/dart_torrent.dir/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/str.cpp.o	c697c4050e7135b9
+14	2982	1655752187	CMakeFiles/dart_torrent.dir/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/misc.cpp.o	9f1931dda89492f0
+15	3001	1655752187	CMakeFiles/dart_torrent.dir/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/sql.cpp.o	36a8ed5f1610cf78
+13	3655	1655752188	CMakeFiles/dart_torrent.dir/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/dart_torrent.cpp.o	8efb985508c61def
+3655	3940	1655752188	/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/build/app/intermediates/cxx/Debug/4p5g10z1/obj/arm64-v8a/libdart_torrent.so	e27e8093da309f00
+11	3523	1655752758	CMakeFiles/dart_torrent.dir/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/misc.cpp.o	9f1931dda89492f0
+13	3561	1655752758	CMakeFiles/dart_torrent.dir/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/sql.cpp.o	36a8ed5f1610cf78
+8	4405	1655752759	CMakeFiles/dart_torrent.dir/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/dart_torrent.cpp.o	8efb985508c61def
+4405	4699	1655752759	/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/build/app/intermediates/cxx/Debug/4p5g10z1/obj/arm64-v8a/libdart_torrent.so	83154265c672e25

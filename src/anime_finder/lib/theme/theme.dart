@@ -1,5 +1,4 @@
 import 'package:anime_finder/theme/lib_color_schemes.g.dart';
-
 import 'package:flutter/material.dart';
 
 import 'style.dart';
@@ -7,14 +6,13 @@ import 'style.dart';
 ThemeData themeData(ColorScheme colorScheme) => ThemeData(
     visualDensity: VisualDensity.adaptivePlatformDensity,
     textTheme: kCurrentTextTheme,
-    // colorScheme: colorScheme,
+    colorScheme: colorScheme,
     brightness: colorScheme.brightness,
-    colorSchemeSeed: seed,
     appBarTheme: AppBarTheme(
         color: colorScheme.background,
         foregroundColor: colorScheme.onBackground,
         iconTheme: IconThemeData(color: colorScheme.onBackground)),
-    // primaryColor: colorScheme.primary,
+    primaryColor: colorScheme.primary,
     scaffoldBackgroundColor: colorScheme.background,
     backgroundColor: colorScheme.background,
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
@@ -22,7 +20,7 @@ ThemeData themeData(ColorScheme colorScheme) => ThemeData(
       unselectedItemColor: colorScheme.onBackground,
       selectedItemColor: colorScheme.primary,
     ),
-    // dialogBackgroundColor: Settings.currentColorScheme.background,
+    dialogBackgroundColor: colorScheme.background,
     dialogTheme: DialogTheme(
         backgroundColor: colorScheme.background,
         shape: RoundedRectangleBorder(
@@ -53,7 +51,8 @@ ThemeData themeData(ColorScheme colorScheme) => ThemeData(
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
-      backgroundColor: MaterialStateProperty.all(colorScheme.background.withOpacity(0.8)),
+      backgroundColor:
+          MaterialStateProperty.all(colorScheme.background.withOpacity(0.8)),
       foregroundColor: MaterialStateProperty.all(colorScheme.onBackground),
       shape: MaterialStateProperty.all(RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),

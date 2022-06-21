@@ -1,0 +1,365 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/build/app/intermediates/cxx/Debug/2s4749n5/obj/armeabi-v7a/libdart_torrent.so"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"add_definitions",
+			"include_directories"
+		],
+		"files" : 
+		[
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 32,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 21,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -mthumb -Wformat -Werror=format-security  -frtti -fexceptions -std=c++17 -fvisibility=default -Dencryption=ON -DFMT_HEADER_ONLY -DTORRENT_HAVE_MMAP=0 -DTORRENT_NO_DEPRECATE -DTORRENT_DISABLE_SUPERSEEDING -DTORRENT_DISABLE_SHARE_MODE -DBOOST_ALL_NO_LIB -DBOOST_ASIO_ENABLE_CANCELIO -DBOOST_ASIO_HAS_STD_CHRONO -DBOOST_MULTI_INDEX_DISABLE_SERIALIZATION -DBOOST_NO_DEPRECATED -DBOOST_SYSTEM_NO_DEPRECATED -g3 -O0 -O0 -fno-limit-debug-info  -fPIC"
+				},
+				{
+					"fragment" : "-std=gnu++14"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 2,
+					"define" : "BOOST_ALL_NO_LIB"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "BOOST_ASIO_ENABLE_CANCELIO"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "BOOST_ASIO_HAS_STD_CHRONO"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "BOOST_MULTI_INDEX_DISABLE_SERIALIZATION"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "BOOST_NO_DEPRECATED"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "BOOST_SYSTEM_NO_DEPRECATED"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "FMT_HEADER_ONLY"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "NDEBUG"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "TORRENT_DISABLE_SHARE_MODE"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "TORRENT_DISABLE_SUPERSEEDING"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "TORRENT_HAVE_MMAP=0"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "TORRENT_NO_DEPRECATE"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "TORRENT_USE_OPENSSL"
+				},
+				{
+					"define" : "dart_torrent_EXPORTS"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 3,
+					"path" : "/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/android/app/../../lib/dart_torrent/external/sqlite3"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/android/app/../../lib/dart_torrent/external/fmt/include"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/android/app/../../lib/dart_torrent/lib/android/boost/armeabi-v7a/include/boost-1_78"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/android/app/../../lib/dart_torrent/build/libtorrent/include"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/android/app/../../lib/dart_torrent/build/openssl/include"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/android/app/../../lib/dart_torrent/build/openssl/build/armeabi-v7a/include"
+				}
+			],
+			"language" : "CXX",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				5
+			],
+			"sysroot" : 
+			{
+				"path" : "/Users/yusing/Library/Android/sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/darwin-x86_64/sysroot"
+			}
+		},
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -mthumb -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC"
+				},
+				{
+					"fragment" : "-std=gnu11"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 2,
+					"define" : "BOOST_ALL_NO_LIB"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "BOOST_ASIO_ENABLE_CANCELIO"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "BOOST_ASIO_HAS_STD_CHRONO"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "BOOST_MULTI_INDEX_DISABLE_SERIALIZATION"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "BOOST_NO_DEPRECATED"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "BOOST_SYSTEM_NO_DEPRECATED"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "FMT_HEADER_ONLY"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "NDEBUG"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "TORRENT_DISABLE_SHARE_MODE"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "TORRENT_DISABLE_SUPERSEEDING"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "TORRENT_HAVE_MMAP=0"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "TORRENT_NO_DEPRECATE"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "TORRENT_USE_OPENSSL"
+				},
+				{
+					"define" : "dart_torrent_EXPORTS"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 3,
+					"path" : "/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/android/app/../../lib/dart_torrent/external/sqlite3"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/android/app/../../lib/dart_torrent/external/fmt/include"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/android/app/../../lib/dart_torrent/lib/android/boost/armeabi-v7a/include/boost-1_78"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/android/app/../../lib/dart_torrent/build/libtorrent/include"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/android/app/../../lib/dart_torrent/build/openssl/include"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/android/app/../../lib/dart_torrent/build/openssl/build/armeabi-v7a/include"
+				}
+			],
+			"language" : "C",
+			"sourceIndexes" : 
+			[
+				3,
+				4
+			],
+			"sysroot" : 
+			{
+				"path" : "/Users/yusing/Library/Android/sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/darwin-x86_64/sysroot"
+			}
+		}
+	],
+	"id" : "dart_torrent::@6890427a1f51a3e7e1df",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-Wl,--exclude-libs,libgcc.a -Wl,--exclude-libs,libgcc_real.a -Wl,--exclude-libs,libatomic.a -Wl,--build-id -Wl,--fatal-warnings -Wl,--exclude-libs,libunwind.a -Wl,--no-undefined -Qunused-arguments",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "-L/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/android/app/../../lib/dart_torrent/lib/android/libtorrent/armeabi-v7a/debug",
+				"role" : "libraryPath"
+			},
+			{
+				"fragment" : "-L/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/android/app/../../lib/dart_torrent/lib/android/openssl/armeabi-v7a",
+				"role" : "libraryPath"
+			},
+			{
+				"fragment" : "-ltorrent-rasterbar",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-lcrypto",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-lssl",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-latomic -lm",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX",
+		"sysroot" : 
+		{
+			"path" : "/Users/yusing/Library/Android/sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/darwin-x86_64/sysroot"
+		}
+	},
+	"name" : "dart_torrent",
+	"nameOnDisk" : "libdart_torrent.so",
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/dart_torrent.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/misc.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/sql.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 1,
+			"path" : "/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/sqlite3/shell.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 1,
+			"path" : "/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/sqlite3/sqlite3.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/yusing/Projects/GitHub/AnimeFinderFlutter/src/anime_finder/lib/dart_torrent/src/str.cpp",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "SHARED_LIBRARY"
+}

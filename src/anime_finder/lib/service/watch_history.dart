@@ -1,29 +1,52 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:anime_finder/service/storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import 'libtorrent.dart';
+
 part 'watch_history.g.dart';
 
-enum WatchHistoryEntityType { video, image }
+enum WatchHistoryEntryType { video, image, audio, all }
+
+List<String> watchHistoryEntryTypeStringKey = [
+  'anime',
+  'comics',
+  'music',
+  'all',
+];
 
 @JsonSerializable()
 class WatchHistoryEntry {
-  final WatchHistoryEntityType type;
+  final WatchHistoryEntryType type;
   final int id;
   String title;
-  String path;
-  int? duration; // video duration in seconds, or index for image
-  int? position; // video position in seconds, or count for images
+  String get path => _getPath();
+  int? duration; // video/music duration in seconds, or index for image
+  int? position; // video/music position in seconds, or pages for images
 
   WatchHistoryEntry(
       {required this.id,
       required this.title,
-      required this.path,
+      required String path,
       required this.type,
       this.duration,
-      this.position});
+      this.position})
+      : _path = path;
+
+  String _path;
+  String _getPath() {
+    if (Platform.isIOS) {
+      return torrentSavePathRoot +
+          _path.substring(_path.indexOf('/AnimeFinderDownloads/') +
+              '/AnimeFinderDownloads'.length);
+    }
+    return _path;
+  }
+
+  set path(value) => _path = value;
 
   factory WatchHistoryEntry.fromJson(Map<String, dynamic> json) =>
       _$WatchHistoryEntryFromJson(json);
@@ -66,7 +89,7 @@ class WatchHistory {
     if (entryIndex != -1) {
       history.value.removeAt(entryIndex);
     }
-    history.value.add(entry);
+    history.value.insert(0, entry);
     update();
   }
 
@@ -75,35 +98,51 @@ class WatchHistory {
     update();
   }
 
+  static void updateDuration(int id, Duration duration) {
+    final entryIndex = history.value.indexWhere((e) => e.id == id);
+    if (entryIndex == -1) {
+      debugPrint('WatchHistory.updateDuration: entry not found');
+      return;
+    }
+    history.value[entryIndex].duration = duration.inSeconds;
+    update();
+  }
+
+  static Duration getDuration(int id) {
+    final entryIndex = history.value.indexWhere((e) => e.id == id);
+    if (entryIndex == -1) {
+      debugPrint('WatchHistory.getDuration: entry not found');
+      return Duration.zero;
+    }
+    return Duration(seconds: history.value[entryIndex].duration ?? 0);
+  }
+
   /* Image */
   static void updateIndex(int id, int index) {
     final entryIndex = history.value.indexWhere((e) => e.id == id);
     if (entryIndex == -1) {
-      debugPrint('updateIndex $id not found');
+      debugPrint('WatchHistory.updateIndex $id not found');
       return;
     }
     history.value[entryIndex].position = index;
-    update().then((_) {
-      debugPrint('updateIndex $id updated to $index');
-    });
+    update();
   }
 
   static int getIndex(int id) {
     var index = history.value.indexWhere((e) => e.id == id);
     if (index == -1) {
-      debugPrint('getIndex $id not found');
+      debugPrint('WatchHistory.getIndex $id not found');
       return 0;
     }
-    index = history.value[index].position!;
+    index = history.value[index].position ?? 0;
     return index;
   }
 
-  /* Videos */
-  static updatePosition(int videoId, Duration position) {
+  static updatePosition(int id, Duration position) {
     if (position == Duration.zero) {
       return;
     }
-    updateIndex(videoId, position.inSeconds);
+    updateIndex(id, position.inSeconds);
   }
 
   static Duration getPosition(int videoId) {

@@ -26,7 +26,7 @@ class SettingsPage extends StatelessWidget {
             return Visibility(
               visible: kDebugMode,
               child: ListTile(
-                title: Text(trSettingResetAllSettings,
+                title: Text(trResetAllSettings,
                     style: kTitleMedium.copyWith(
                       color: Colors.redAccent,
                     )),
@@ -36,13 +36,13 @@ class SettingsPage extends StatelessWidget {
                     radius: 16,
                     titleStyle: kTitleMedium,
                     title: trWarning,
-                    content:
-                        Text(trSettingResetAllSettingsConfirm, style: kBodySmall),
+                    content: Text(trResetAllSettingsConfirm, style: kBodySmall),
                     actions: [
                       MaterialButton(
                         child: Text(trConfirm, style: kLabelSmall),
                         onPressed: () async {
-                          await showToast(message: 'Restart app to apply settings');
+                          await showToast(
+                              message: 'Restart app to apply settings');
                           await Settings.reset();
                           Get.back(closeOverlays: true);
                         },
