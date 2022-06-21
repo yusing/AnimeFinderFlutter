@@ -1,0 +1,3 @@
+[submodule "src/anime_finder/lib/dart_torrent"]
+	path = src/anime_finder/lib/dart_torrent
+	url = https://github.com/yusing/dart_torrent
