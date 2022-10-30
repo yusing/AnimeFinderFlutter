@@ -1,5 +1,6 @@
 # AnimeFinder
 
+(A rework is ongoing on this project. No more commits may come for a moment until the rework is done.)
 ACG資源搜尋、下載工具。
 [English version of ReadMe](README_EN.md)
 
